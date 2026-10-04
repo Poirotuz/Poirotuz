@@ -1,13 +1,13 @@
 {
-  "built": "2026-10-04T05:28:17.368Z",
+  "built": "2026-10-04T05:56:51.036Z",
   "rulesets": [
     {
       "id": "easylist",
-      "count": 2692
+      "count": 2680
     },
     {
       "id": "cyrillic",
-      "count": 11213
+      "count": 11192
     },
     {
       "id": "toza",

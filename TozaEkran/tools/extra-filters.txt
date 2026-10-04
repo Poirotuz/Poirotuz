@@ -16,7 +16,7 @@
 ||yourbonus.online^$third-party
 ! Uchinchi tomon .php skriptlari (popunder/banner yuklovchilar) — RuAdList va AdGuard asosida
 .php$script,third-party,domain=asilmedia.org
-/^https?:\/\/[a-z]{6}\.[^\/]+\/[a-z0-9]{3,30}\/[a-z0-9]{5,}\.php$/$script,third-party,domain=asilmedia.org
+/^https?:\/\/[a-z]{6}\.[^\/]+\/[a-z0-9]+\/[a-z0-9]+\.php$/$script,third-party,domain=asilmedia.org
 ! Saytdan ochiladigan begona popup oynalarni yopish (qattiq rejim)
 $popup,domain=asilmedia.org
 ! Kosmetik

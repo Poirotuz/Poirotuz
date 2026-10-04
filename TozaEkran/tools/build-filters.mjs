@@ -11,6 +11,7 @@
 // Ro'yxatlarni yuklab olish uchun: ./update-filters.sh
 
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import url from 'node:url';
 
@@ -423,26 +424,74 @@ function buildRuleset(lines, badfilters) {
     seen.add(k);
     out.push(r);
   }
-  let regexCount = 0;
-  const final = [];
-  for (const r of out) {
-    if (r.condition.regexFilter && ++regexCount > 300) continue;
-    final.push({ id: final.length + 1, ...r });
+  return out;
+}
+
+const regexKey = (c) => `${c.isUrlFilterCaseSensitive ? 1 : 0}|${c.regexFilter}`;
+
+// Chrome regexFilter'ni RE2 bilan kompilyatsiya qiladi va 2 KB xotira limitidan oshganlarini
+// o'tkazib yuborib, kengaytmalar sahifasida ogohlantirish ko'rsatadi. Shuning uchun har bir
+// regex'ni oldindan brauzerning o'zida (isRegexSupported) tekshiramiz.
+async function validateRegexes(conds) {
+  const keys = [...new Set(conds.map(regexKey))];
+  const chromium = await loadChromium();
+  if (!chromium) {
+    console.warn('! Playwright topilmadi — regex qoidalari taxminiy tekshirildi');
+    // Taxminiy tekshiruv: katta takrorlash chegaralari xotira limitidan oshishiga olib keladi
+    return new Set(keys.filter((k) => {
+      const re = k.slice(2);
+      return re.length <= 120 && ![...re.matchAll(/\{(\d+)(?:,(\d*))?\}/g)].some((m) => +m[1] > 8 || m[2] === '' || +m[2] > 8);
+    }));
   }
-  return final;
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'toza-rx-'));
+  fs.writeFileSync(path.join(dir, 'manifest.json'), JSON.stringify({
+    manifest_version: 3, name: 'rx', version: '1',
+    background: { service_worker: 'sw.js' }, permissions: ['declarativeNetRequest'],
+  }));
+  fs.writeFileSync(path.join(dir, 'sw.js'), '');
+  const ctx = await chromium.launchPersistentContext(path.join(dir, 'profile'), {
+    channel: 'chromium', headless: true,
+    args: [`--disable-extensions-except=${dir}`, `--load-extension=${dir}`],
+  });
+  try {
+    let [sw] = ctx.serviceWorkers();
+    if (!sw) sw = await ctx.waitForEvent('serviceworker');
+    const ok = await sw.evaluate(async (list) => {
+      const res = [];
+      for (const k of list) {
+        const r = await chrome.declarativeNetRequest.isRegexSupported({ regex: k.slice(2), isCaseSensitive: k[0] === '1' });
+        res.push(r.isSupported);
+      }
+      return res;
+    }, keys);
+    return new Set(keys.filter((_, i) => ok[i]));
+  } finally {
+    await ctx.close();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+let chromiumCache;
+async function loadChromium() {
+  if (chromiumCache !== undefined) return chromiumCache;
+  chromiumCache = null;
+  for (const p of ['playwright', '/opt/node-tools/node_modules/playwright/index.js', 'playwright-core']) {
+    try {
+      const pw = await import(p);
+      chromiumCache = pw.chromium || pw.default?.chromium || null;
+      if (chromiumCache) break;
+    } catch { /* keyingisini sinab ko'ramiz */ }
+  }
+  return chromiumCache;
 }
 
 // Selektorlarni haqiqiy Chromium'da tekshirish (Playwright mavjud bo'lsa)
 async function validateInBrowser(selectors, cssRules) {
-  let pw;
-  for (const p of ['playwright', '/opt/node-tools/node_modules/playwright/index.js', 'playwright-core']) {
-    try { pw = await import(p); break; } catch { /* keyingisini sinab ko'ramiz */ }
-  }
-  if (!pw) {
+  const chromium = await loadChromium();
+  if (!chromium) {
     console.warn('! Playwright topilmadi — selektorlar brauzerda tekshirilmadi');
     return { selOk: new Set(selectors), cssOk: new Set(cssRules) };
   }
-  const chromium = pw.chromium || pw.default?.chromium;
   const browser = await chromium.launch();
   const page = await browser.newPage();
   await page.setContent('<html><body></body></html>');
@@ -482,10 +531,20 @@ async function main() {
 
   fs.mkdirSync(path.join(OUT, 'rules'), { recursive: true });
   fs.mkdirSync(path.join(OUT, 'data'), { recursive: true });
+  const built = perRuleset.map(({ id, lines }) => ({ id, rules: buildRuleset(lines, badfilters) }));
+  const regexConds = built.flatMap((b) => b.rules.map((r) => r.condition).filter((c) => c.regexFilter));
+  const regexOk = await validateRegexes(regexConds);
+  console.log('Regex qoidalari:', regexConds.length, '| brauzer qabul qilmagani:', regexConds.filter((c) => !regexOk.has(regexKey(c))).length);
+
   const rulesetMeta = [];
   const allowIds = {};
-  for (const { id, lines } of perRuleset) {
-    const rules = buildRuleset(lines, badfilters);
+  for (const { id, rules: raw } of built) {
+    let regexCount = 0;
+    const rules = [];
+    for (const r of raw) {
+      if (r.condition.regexFilter && (!regexOk.has(regexKey(r.condition)) || ++regexCount > 300)) continue;
+      rules.push({ id: rules.length + 1, ...r });
+    }
     fs.writeFileSync(path.join(OUT, 'rules', `${id}.json`), JSON.stringify(rules));
     rulesetMeta.push({ id, count: rules.length });
     allowIds[id] = rules.filter((r) => r.action.type !== 'block').map((r) => r.id);
