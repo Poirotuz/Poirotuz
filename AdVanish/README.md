@@ -1,6 +1,6 @@
-# TozaEkran — Yandex Browser uchun reklama bloklovchi
+# AdVanish — Yandex Browser uchun reklama bloklovchi
 
-**TozaEkran** — saytlardagi reklamalarni bloklaydigan brauzer kengaytmasi (расширение).
+**AdVanish** — saytlardagi reklamalarni bloklaydigan brauzer kengaytmasi (расширение).
 Yandex Browser uchun yozilgan, lekin Chromium asosidagi boshqa brauzerlarda ham ishlaydi
 (Google Chrome, Microsoft Edge, Opera, Brave).
 
@@ -32,11 +32,11 @@ Ayniqsa kino saytlari uchun moslangan: **asilmedia.org** dagi bannerlar, video-r
 ## Yandex Browser'ga o'rnatish
 
 1. Shu repozitoriyani yuklab oling: GitHub sahifasida **Code → Download ZIP** ni bosing va arxivni oching.
-   (Yoki tayyor `TozaEkran.zip` faylini oching.)
+   (Yoki tayyor `AdVanish.zip` faylini oching.)
 2. Yandex Browser manzil satriga yozing: `browser://extensions` va Enter bosing.
 3. O'ng yuqoridagi **«Режим разработчика»** (Developer mode) tugmasini yoqing.
 4. **«Загрузить распакованное расширение»** (Load unpacked) tugmasini bosing.
-5. Ochilgan oynada **`TozaEkran/extension`** papkasini tanlang (ichida `manifest.json` bo'lgan papka).
+5. Ochilgan oynada **`AdVanish/extension`** papkasini tanlang (ichida `manifest.json` bo'lgan papka).
 6. Tayyor! Kengaytma ikonkasi (yashil qalqon ▶) asboblar panelida paydo bo'ladi.
    Qulaylik uchun uni panelga mahkamlab qo'ying.
 
@@ -44,7 +44,7 @@ Ayniqsa kino saytlari uchun moslangan: **asilmedia.org** dagi bannerlar, video-r
 > Brauzer ishga tushganda "dasturchi rejimidagi kengaytmalar" haqida ogohlantirsa — bu odatiy hol.
 
 Google Chrome / Edge / Opera'da ham xuddi shunday: `chrome://extensions` (Edge: `edge://extensions`) →
-Developer mode → Load unpacked → `TozaEkran/extension`.
+Developer mode → Load unpacked → `AdVanish/extension`.
 
 ## Do'konga joylash (developer rejimisiz o'rnatish uchun)
 
@@ -62,7 +62,7 @@ Ikonkani bosing — kichik oyna ochiladi:
 - **Statistika** — shu sahifada bloklangan so'rovlar, to'xtatilgan popup oynalar va olib tashlangan elementlar.
 - **🎯 Reklamani tanlab o'chirish** — reklama ustiga sichqonchani olib boring va bosing, so'ng **✓ Yashirish**.
   «▲ Kattaroq» tugmasi bilan butun reklama blokini tanlash mumkin. Shuningdek, sahifada sichqonchaning
-  o'ng tugmasi → **«TozaEkran: reklamani tanlab o'chirish»**.
+  o'ng tugmasi → **«AdVanish: reklamani tanlab o'chirish»**.
 - **Qattiq popup rejimi** — saytdan ochiladigan barcha begona oynalarni yopadi (kino saytlari uchun foydali).
 - **Sozlamalar ⚙** — o'chirilgan saytlar, qattiq rejim ro'yxati, qo'lda yashirilgan elementlar, zaxira nusxa (eksport/import).
 
@@ -80,7 +80,7 @@ Kengaytma ikonkasidagi raqam — joriy sahifada bloklangan reklama so'rovlari so
 ## Qanday ishlaydi (dasturchilar uchun)
 
 ```
-TozaEkran/
+AdVanish/
 ├── extension/                ← brauzerga yuklanadigan papka (Manifest V3)
 │   ├── manifest.json
 │   ├── background.js         ← fon xizmati: kosmetik CSS, popup yopuvchi, sozlamalar, statistika
@@ -93,7 +93,7 @@ TozaEkran/
 │   ├── popup/  options/  icons/
 └── tools/
     ├── build-filters.mjs     ← filtr ro'yxatlarini MV3 qoidalariga aylantiruvchi generator
-    ├── extra-filters.txt     ← TozaEkran'ning o'z qoidalari (asilmedia.org, bukmekerlar, video-reklama serverlari)
+    ├── extra-filters.txt     ← AdVanish'ning o'z qoidalari (asilmedia.org, bukmekerlar, video-reklama serverlari)
     └── update-filters.sh     ← ro'yxatlarni yuklab olib, qoidalarni qayta yaratish
 ```
 
@@ -105,7 +105,7 @@ TozaEkran/
 ro'yxatlarni yangilang:
 
 ```bash
-cd TozaEkran/tools
+cd AdVanish/tools
 ./update-filters.sh     # git va Node.js 18+ kerak
 ```
 

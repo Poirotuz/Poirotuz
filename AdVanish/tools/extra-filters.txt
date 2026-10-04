@@ -1,5 +1,5 @@
-! TozaEkran — qo'lda yozilgan qo'shimcha filtrlar (ABP / AdGuard sintaksisi)
-! Generator bu faylni ham boshqa ro'yxatlar bilan birga "toza" qoidalar to'plamiga aylantiradi.
+! AdVanish — qo'lda yozilgan qo'shimcha filtrlar (ABP / AdGuard sintaksisi)
+! Generator bu faylni ham boshqa ro'yxatlar bilan birga "advanish" qoidalar to'plamiga aylantiradi.
 !
 !------------------------------------------------------------------
 ! asilmedia.org

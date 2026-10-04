@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// TozaEkran filtr generatori.
+// AdVanish filtr generatori.
 //
 // EasyList, RuAdList va AdGuard (kirill + xorijiy) ro'yxatlarini quyidagilarga aylantiradi:
 //   extension/rules/*.json        — Manifest V3 declarativeNetRequest statik qoidalari
@@ -64,7 +64,7 @@ const RULESETS = [
     ],
   },
   {
-    id: 'toza',
+    id: 'advanish',
     files: [path.join(HERE, 'extra-filters.txt')],
   },
 ];
@@ -443,7 +443,7 @@ async function validateRegexes(conds) {
       return re.length <= 120 && ![...re.matchAll(/\{(\d+)(?:,(\d*))?\}/g)].some((m) => +m[1] > 8 || m[2] === '' || +m[2] > 8);
     }));
   }
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'toza-rx-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'advanish-rx-'));
   fs.writeFileSync(path.join(dir, 'manifest.json'), JSON.stringify({
     manifest_version: 3, name: 'rx', version: '1',
     background: { service_worker: 'sw.js' }, permissions: ['declarativeNetRequest'],
@@ -578,7 +578,7 @@ async function main() {
     genericExceptOut.push([s, [...all].sort()]);
   }
   genericStatic.sort();
-  let css = '/* TozaEkran — umumiy yashirish qoidalari (avtomatik yaratilgan) */\n';
+  let css = '/* AdVanish — umumiy yashirish qoidalari (avtomatik yaratilgan) */\n';
   for (let i = 0; i < genericStatic.length; i += 40) {
     css += genericStatic.slice(i, i + 40).join(',\n') + '\n{ display: none !important; }\n';
   }

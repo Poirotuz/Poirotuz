@@ -1,4 +1,4 @@
-// TozaEkran — kontent-skript (izolyatsiyalangan muhit)
+// AdVanish — kontent-skript (izolyatsiyalangan muhit)
 //
 //  * saytga xos CSS'ni so'raydi (fon xizmati uni USER darajasida kiritadi);
 //  * matn bo'yicha (protsedural) filtrlarni qo'llaydi;
@@ -7,8 +7,8 @@
 //  * foydalanuvchi bosgan havolalar haqida fon xizmatiga xabar beradi (popup yopuvchi uchun).
 (() => {
   'use strict';
-  if (window.__tozaEkranContent) return;
-  window.__tozaEkranContent = true;
+  if (window.__adVanishContent) return;
+  window.__adVanishContent = true;
 
   const isTop = window === window.top;
   const BET_RE = /1x(?:bet|slot)|1win|mostbet|melbet|pin-?up\.|betwinner|22bet|linebet|megapari|vavada|joycasino|888starz|parimatch|betandyou|olimpbet|leonbets|fonbet|yourbonus|casino|kazino|yangi-kinolar/i;
@@ -57,8 +57,8 @@
   }
 
   function hide(el) {
-    if (!el || el.hasAttribute('data-toza-hidden')) return false;
-    el.setAttribute('data-toza-hidden', '');
+    if (!el || el.hasAttribute('data-advanish-hidden')) return false;
+    el.setAttribute('data-advanish-hidden', '');
     el.style.setProperty('display', 'none', 'important');
     count('elements');
     return true;
@@ -66,7 +66,7 @@
 
   // ---------------------------------------------------------- MAIN muhitdan xabarlar
 
-  document.addEventListener('toza-ekran:blocked', () => count('popups'), true);
+  document.addEventListener('advanish:blocked', () => count('popups'), true);
 
   // ---------------------------------------------------- foydalanuvchi bosgan havolalar
 
@@ -111,7 +111,7 @@
     }
     if (!best) return null;
     const el = best.node;
-    if (el.closest('[data-toza-picker]')) return null;
+    if (el.closest('[data-advanish-picker]')) return null;
     const a = el.matches('a[href]') ? el : (start.closest('a[href]') || el.querySelector('a[href]'));
     if (!a || !crossSite(a.href)) return null;
     if (BET_RE.test(a.hostname)) return el;
@@ -256,7 +256,7 @@
       let nodes;
       try { nodes = document.querySelectorAll(base); } catch { continue; }
       for (const n of nodes) {
-        if (!n.hasAttribute('data-toza-hidden') && test(n.textContent || '')) hide(n);
+        if (!n.hasAttribute('data-advanish-hidden') && test(n.textContent || '')) hide(n);
       }
     }
   }
@@ -330,7 +330,7 @@
       if (document.body) scanOverlays();
       scanVideoAds();
     } catch (e) {
-      console.debug('TozaEkran:', e);
+      console.debug('AdVanish:', e);
     }
   }
   function scheduleScan() {
@@ -369,7 +369,7 @@
   send({ type: 'init', host: location.hostname, top: isTop }).then((r) => {
     cfg = r;
     if (!r || !r.enabled) { stop(); return; }
-    if (r.strict) document.documentElement?.setAttribute('data-toza-strict', '1');
+    if (r.strict) document.documentElement?.setAttribute('data-advanish-strict', '1');
     start();
   });
 })();

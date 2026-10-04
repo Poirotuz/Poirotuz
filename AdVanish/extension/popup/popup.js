@@ -1,4 +1,4 @@
-// TozaEkran — popup oynasi
+// AdVanish — popup oynasi
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => (n === null || n === undefined ? '—' : Number(n).toLocaleString('uz-UZ'));
 

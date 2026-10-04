@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "TozaEkran — reklama bloklovchi",
-  "short_name": "TozaEkran",
-  "version": "1.0.1",
+  "name": "AdVanish — reklama bloklovchi",
+  "short_name": "AdVanish",
+  "version": "1.0.2",
   "description": "Saytlardagi barcha reklamalarni bloklaydi: bannerlar, popup oynalar, video-reklamalar. asilmedia.org va kino saytlari uchun maxsus himoya.",
   "minimum_chrome_version": "111",
   "icons": {
@@ -13,7 +13,7 @@
   },
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "TozaEkran",
+    "default_title": "AdVanish",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
@@ -42,7 +42,7 @@
   ],
   "declarative_net_request": {
     "rule_resources": [
-      { "id": "toza", "enabled": true, "path": "rules/toza.json" },
+      { "id": "advanish", "enabled": true, "path": "rules/advanish.json" },
       { "id": "easylist", "enabled": true, "path": "rules/easylist.json" },
       { "id": "cyrillic", "enabled": true, "path": "rules/cyrillic.json" }
     ]

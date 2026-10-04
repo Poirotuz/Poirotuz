@@ -1,15 +1,15 @@
-// TozaEkran — "reklamani tanlab o'chirish" vositasi.
+// AdVanish — "reklamani tanlab o'chirish" vositasi.
 // Sichqoncha bilan elementni tanlang → u shu saytda doimiy yashiriladi.
 (() => {
   'use strict';
-  if (window.__tozaPickerActive) return;
-  window.__tozaPickerActive = true;
+  if (window.__adVanishPickerActive) return;
+  window.__adVanishPickerActive = true;
 
   const BAD_TOKEN = /\d{3,}|[a-f0-9]{10,}|^(?:active|hover|focus|open|opened|show|shown|visible|selected|current|is-|has-|js-)/i;
   const esc = (s) => CSS.escape(s);
 
   const host = document.createElement('div');
-  host.setAttribute('data-toza-picker', '');
+  host.setAttribute('data-advanish-picker', '');
   host.style.cssText = 'all:initial;position:fixed;inset:0;z-index:2147483647;pointer-events:none;';
   const root = host.attachShadow({ mode: 'closed' });
   root.innerHTML = `
@@ -46,7 +46,7 @@
     <div class="box main"></div>
     <div class="extras"></div>
     <div class="panel">
-      <div class="title"><span class="dot"></span>TozaEkran — reklamani tanlash</div>
+      <div class="title"><span class="dot"></span>AdVanish — reklamani tanlash</div>
       <div class="idle hint">Yashirmoqchi bo'lgan reklama ustiga sichqonchani olib boring va bosing.<br>Chiqish: <b>Esc</b></div>
       <div class="sel">
         <div class="hint">Tanlangan element shu saytda doimiy yashiriladi. Kerak bo'lsa kattaroq/kichikroq qiling.</div>
@@ -198,7 +198,7 @@
     for (const t of BLOCK) window.removeEventListener(t, onClick, true);
     window.removeEventListener('keydown', onKey, true);
     host.remove();
-    window.__tozaPickerActive = false;
+    window.__adVanishPickerActive = false;
   }
 
   input.addEventListener('input', showMatches);

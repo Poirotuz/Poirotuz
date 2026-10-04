@@ -17,7 +17,7 @@ ildizida bo'lishi shart (papkaning o'zini emas, ichidagilarni tanlab "Сжать
 ## Nomi
 
 ```
-TozaEkran — reklama bloklovchi
+AdVanish — reklama bloklovchi
 ```
 
 ## Qisqa tavsif (132 belgigacha)
@@ -36,7 +36,7 @@ Ruscha:
 
 O'zbekcha:
 ```
-TozaEkran — saytlardagi reklamani bloklaydigan yengil va tez kengaytma.
+AdVanish — saytlardagi reklamani bloklaydigan yengil va tez kengaytma.
 
 • Reklama so'rovlarini bloklaydi — 14 000 dan ortiq qoida (EasyList, RuAdList, AdGuard asosida)
 • Bannerlarni yashiradi va bo'sh qolgan joylarni yig'ib oladi
@@ -54,7 +54,7 @@ Hech qanday ma'lumot yig'ilmaydi va hech qayerga yuborilmaydi.
 
 Ruscha:
 ```
-TozaEkran — лёгкий и быстрый блокировщик рекламы.
+AdVanish — лёгкий и быстрый блокировщик рекламы.
 
 • Блокирует рекламные запросы — более 14 000 правил (на основе EasyList, RuAdList, AdGuard)
 • Скрывает баннеры и убирает пустые места после них
@@ -102,5 +102,5 @@ Blocking advertisements, pop-up windows and video ads on websites.
 tasdiqni belgilang ("I do not sell or transfer user data…").
 
 **Privacy policy URL:** `PRIVACY.md` faylining GitHub havolasi, masalan:
-`https://github.com/Poirotuz/Poirotuz/blob/main/TozaEkran/PRIVACY.md`
+`https://github.com/Poirotuz/Poirotuz/blob/main/AdVanish/PRIVACY.md`
 (branch `main` ga birlashtirilgandan keyin).

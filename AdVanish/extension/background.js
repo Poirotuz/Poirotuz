@@ -1,4 +1,4 @@
-// TozaEkran — fon xizmati (service worker)
+// AdVanish — fon xizmati (service worker)
 //
 // Vazifalari:
 //  * kontent-skriptlarni ro'yxatdan o'tkazish (o'chirilgan saytlar bundan mustasno);
@@ -6,7 +6,7 @@
 //  * reklama popup / popunder yorliqlarini yopish;
 //  * sozlamalar, statistika va popup oynasi bilan aloqa.
 
-const RULESETS = ['toza', 'easylist', 'cyrillic'];
+const RULESETS = ['advanish', 'easylist', 'cyrillic'];
 const MATCHES = ['http://*/*', 'https://*/*'];
 const SITE_RULE_BASE = 1000; // saytni o'chirish uchun dinamik qoidalar ID'si shu sondan boshlanadi
 
@@ -216,7 +216,7 @@ async function syncContentScripts() {
     const existing = await chrome.scripting.getRegisteredContentScripts();
     if (existing.length) await chrome.scripting.unregisterContentScripts({ ids: existing.map((s) => s.id) });
   } catch (e) {
-    console.warn('TozaEkran: unregister xatosi', e);
+    console.warn('AdVanish: unregister xatosi', e);
   }
   if (!st.enabled) return;
 
@@ -225,15 +225,15 @@ async function syncContentScripts() {
   const genericExclude = exclude.concat([...cos.genericHide, ...cos.elemHide].flatMap(sitePatterns));
   const common = { matches: MATCHES, runAt: 'document_start', allFrames: true, matchOriginAsFallback: true };
   const scripts = [
-    { id: 'toza-main', js: ['content/main-world.js'], world: 'MAIN', excludeMatches: exclude, ...common },
-    { id: 'toza-content', js: ['content/content.js'], excludeMatches: exclude, ...common },
-    { id: 'toza-generic', css: ['data/generic.css'], excludeMatches: genericExclude, ...common },
+    { id: 'advanish-main', js: ['content/main-world.js'], world: 'MAIN', excludeMatches: exclude, ...common },
+    { id: 'advanish-content', js: ['content/content.js'], excludeMatches: exclude, ...common },
+    { id: 'advanish-generic', css: ['data/generic.css'], excludeMatches: genericExclude, ...common },
   ];
   try {
     await chrome.scripting.registerContentScripts(scripts);
   } catch (e) {
     // Eski brauzer versiyalari matchOriginAsFallback'ni bilmasligi mumkin
-    console.warn('TozaEkran: qayta urinish (matchOriginAsFallback\'siz)', e);
+    console.warn('AdVanish: qayta urinish (matchOriginAsFallback\'siz)', e);
     for (const s of scripts) delete s.matchOriginAsFallback;
     await chrome.scripting.registerContentScripts(scripts);
   }
@@ -262,8 +262,8 @@ async function syncDnr() {
 }
 
 async function syncAll() {
-  await syncDnr().catch((e) => console.warn('TozaEkran: DNR', e));
-  await syncContentScripts().catch((e) => console.warn('TozaEkran: skriptlar', e));
+  await syncDnr().catch((e) => console.warn('AdVanish: DNR', e));
+  await syncContentScripts().catch((e) => console.warn('AdVanish: skriptlar', e));
   await updateIcon();
 }
 
@@ -273,15 +273,15 @@ async function updateIcon() {
     await chrome.declarativeNetRequest.setExtensionActionOptions({ displayActionCountAsBadgeText: st.enabled });
     await chrome.action.setBadgeBackgroundColor({ color: '#0f9d76' });
     if (chrome.action.setBadgeTextColor) await chrome.action.setBadgeTextColor({ color: '#ffffff' });
-    await chrome.action.setTitle({ title: st.enabled ? 'TozaEkran — himoya yoqilgan' : 'TozaEkran — o\'chirilgan' });
+    await chrome.action.setTitle({ title: st.enabled ? 'AdVanish — himoya yoqilgan' : 'AdVanish — o\'chirilgan' });
   } catch { /* eski API */ }
 }
 
 function createMenus() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
-      id: 'toza-pick',
-      title: 'TozaEkran: reklamani tanlab o\'chirish',
+      id: 'advanish-pick',
+      title: 'AdVanish: reklamani tanlab o\'chirish',
       contexts: ['page', 'image', 'link', 'frame', 'video'],
       documentUrlPatterns: MATCHES,
     });
@@ -292,7 +292,7 @@ chrome.runtime.onInstalled.addListener(() => { createMenus(); syncAll(); });
 chrome.runtime.onStartup.addListener(() => { syncAll(); });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === 'toza-pick' && tab?.id >= 0) startPicker(tab.id);
+  if (info.menuItemId === 'advanish-pick' && tab?.id >= 0) startPicker(tab.id);
 });
 
 async function startPicker(tabId) {
@@ -357,7 +357,7 @@ async function closePopup(tabId, cand, reason) {
       chrome.tabs.update(cand.src, { active: true }).catch(() => {});
       bumpStat(cand.src, 'popups');
     }
-    console.debug('TozaEkran: popup yopildi', reason);
+    console.debug('AdVanish: popup yopildi', reason);
   } catch { /* allaqachon yopilgan */ }
 }
 
@@ -619,6 +619,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!h) return false;
   Promise.resolve(h(msg, sender))
     .then((r) => sendResponse(r))
-    .catch((e) => { console.warn('TozaEkran:', msg.type, e); sendResponse(null); });
+    .catch((e) => { console.warn('AdVanish:', msg.type, e); sendResponse(null); });
   return true;
 });

@@ -1,4 +1,4 @@
-// TozaEkran — sozlamalar sahifasi
+// AdVanish — sozlamalar sahifasi
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => Number(n || 0).toLocaleString('uz-UZ');
 
@@ -133,7 +133,7 @@ $('resetStats').addEventListener('click', async () => {
 $('exportBtn').addEventListener('click', async () => {
   const { settings } = await send({ type: 'getSettings' });
   const data = {
-    app: 'TozaEkran',
+    app: 'AdVanish',
     exported: new Date().toISOString(),
     settings: {
       enabled: settings.enabled,
@@ -143,7 +143,7 @@ $('exportBtn').addEventListener('click', async () => {
     },
   };
   const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-  const a = el('a', { href: url, download: `tozaekran-sozlamalar-${new Date().toISOString().slice(0, 10)}.json` });
+  const a = el('a', { href: url, download: `advanish-sozlamalar-${new Date().toISOString().slice(0, 10)}.json` });
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });

@@ -1,9 +1,9 @@
-// TozaEkran — sahifaning o'z (MAIN) muhitida ishlaydigan himoya.
+// AdVanish — sahifaning o'z (MAIN) muhitida ishlaydigan himoya.
 // Popup / popunder oynalarni ochishga urinishlarni to'xtatadi.
 (() => {
   'use strict';
-  if (window.__tozaEkranMain) return;
-  Object.defineProperty(window, '__tozaEkranMain', { value: true });
+  if (window.__adVanishMain) return;
+  Object.defineProperty(window, '__adVanishMain', { value: true });
 
   // Bu hostlarga popup ochishga ruxsat (kirish/OAuth, ulashish, to'lov tizimlari)
   const ALLOW_HOSTS = [
@@ -40,7 +40,7 @@
   const isTop = window === window.top;
 
   const isStrict = () => matchesHost(topHost, BUILTIN_STRICT) ||
-    document.documentElement?.getAttribute('data-toza-strict') === '1';
+    document.documentElement?.getAttribute('data-advanish-strict') === '1';
 
   // Oxirgi haqiqiy (foydalanuvchi) bosish
   let lastClick = { t: 0, href: '', interactive: false };
@@ -57,7 +57,7 @@
 
   const report = (kind, url) => {
     try {
-      document.dispatchEvent(new CustomEvent('toza-ekran:blocked', { detail: JSON.stringify({ kind, url: String(url || '') }) }));
+      document.dispatchEvent(new CustomEvent('advanish:blocked', { detail: JSON.stringify({ kind, url: String(url || '') }) }));
     } catch { /* e'tiborsiz */ }
   };
 
