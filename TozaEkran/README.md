@@ -46,6 +46,13 @@ Ayniqsa kino saytlari uchun moslangan: **asilmedia.org** dagi bannerlar, video-r
 Google Chrome / Edge / Opera'da ham xuddi shunday: `chrome://extensions` (Edge: `edge://extensions`) →
 Developer mode → Load unpacked → `TozaEkran/extension`.
 
+## Do'konga joylash (developer rejimisiz o'rnatish uchun)
+
+Yandex Browser kengaytmalarni **Chrome Web Store** va **Opera Add-ons** do'konlaridan o'rnata oladi
+(brauzerning «Каталог расширений» bo'limi Opera Add-ons'ga asoslangan). Kengaytmani shu do'konlardan biriga
+joylasangiz, uni har kim bir tugma bilan o'rnatadi va yangilanishlar avtomatik keladi.
+Kerakli skrinshotlar, tavsif matnlari va ruxsatlar izohi — [`store/LISTING.md`](store/LISTING.md).
+
 ## Foydalanish
 
 Ikonkani bosing — kichik oyna ochiladi:
