@@ -6,7 +6,7 @@ Bu papkada Chrome Web Store / Opera Add-ons uchun kerakli hamma narsa bor:
 |---|---|
 | `screenshot-1.png`, `screenshot-2.png`, `screenshot-3.png` | Do'kon skrinshotlari (1280×800) |
 | `promo-440x280.png` | Kichik promo-rasm (Chrome Web Store) |
-| `../extension/icons/icon128.png` | Do'kon ikonkasi (128×128) |
+| `store-icon-128.png` | Do'kon ikonkasi (128×128, atrofida 16px bo'sh joy — do'kon talabiga mos) |
 | `../PRIVACY.md` | Maxfiylik siyosati (havolasini do'konga qo'ying) |
 
 **Yuklanadigan arxiv:** `extension` papkasining **ichidagi** fayllar zip qilinadi — `manifest.json` arxivning
