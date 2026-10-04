@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TozaEkran</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="../icons/icon48.png" alt="" class="logo">
+    <div class="brand">
+      <div class="name">TozaEkran</div>
+      <div class="tag" id="globalLabel">Himoya yoqilgan</div>
+    </div>
+    <label class="switch" title="Butun kengaytmani yoqish / o'chirish">
+      <input type="checkbox" id="globalToggle">
+      <span></span>
+    </label>
+  </header>
+
+  <section class="site" id="siteCard">
+    <div class="site-host" id="siteHost">—</div>
+    <div class="site-row">
+      <div>
+        <div class="site-title" id="siteTitle">Bu saytda himoya</div>
+        <div class="site-sub" id="siteSub"></div>
+      </div>
+      <label class="switch small">
+        <input type="checkbox" id="siteToggle">
+        <span></span>
+      </label>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="num" id="statRequests">0</div>
+      <div class="lbl">bloklangan so'rov</div>
+    </div>
+    <div class="stat">
+      <div class="num" id="statPopups">0</div>
+      <div class="lbl">to'xtatilgan popup</div>
+    </div>
+    <div class="stat">
+      <div class="num" id="statElements">0</div>
+      <div class="lbl">olib tashlangan element</div>
+    </div>
+  </section>
+
+  <section class="actions">
+    <button id="pickBtn" class="primary">
+      <span class="ico">🎯</span>
+      <span>
+        <b>Reklamani tanlab o'chirish</b>
+        <small>Qolgan reklamani sichqoncha bilan bosing</small>
+      </span>
+    </button>
+    <div class="option">
+      <div>
+        <b>Qattiq popup rejimi</b>
+        <small id="strictSub">Saytdan ochiladigan barcha begona oynalarni yopish</small>
+      </div>
+      <label class="switch small">
+        <input type="checkbox" id="strictToggle">
+        <span></span>
+      </label>
+    </div>
+  </section>
+
+  <div class="notice" id="notice" hidden></div>
+
+  <footer>
+    <span id="totals"></span>
+    <a href="#" id="optionsLink">Sozlamalar ⚙</a>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

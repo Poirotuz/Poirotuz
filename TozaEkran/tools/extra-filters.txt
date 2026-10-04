@@ -1,0 +1,149 @@
+! TozaEkran — qo'lda yozilgan qo'shimcha filtrlar (ABP / AdGuard sintaksisi)
+! Generator bu faylni ham boshqa ro'yxatlar bilan birga "toza" qoidalar to'plamiga aylantiradi.
+!
+!------------------------------------------------------------------
+! asilmedia.org
+!------------------------------------------------------------------
+! Video-reklamalar (22bet, Mostbet, vivi pre-roll roliklari) GitHub'dagi repodan yuklanadi
+||raw.githubusercontent.com/AsilMediaUzbek/
+||cdn.jsdelivr.net/gh/AsilMediaUzbek/
+||media.githubusercontent.com/media/AsilMediaUzbek/
+||github.com/AsilMediaUzbek/*/raw/$~document
+||statically.io/gh/AsilMediaUzbek/
+||raw.githack.com/AsilMediaUzbek/
+! Reklama serveri: banner (pc.gif) va VAST XML
+||yangi-kinolar.ru^$third-party
+||yourbonus.online^$third-party
+! Uchinchi tomon .php skriptlari (popunder/banner yuklovchilar) — RuAdList va AdGuard asosida
+.php$script,third-party,domain=asilmedia.org
+/^https?:\/\/[a-z]{6}\.[^\/]+\/[a-z0-9]{3,30}\/[a-z0-9]{5,}\.php$/$script,third-party,domain=asilmedia.org
+! Saytdan ochiladigan begona popup oynalarni yopish (qattiq rejim)
+$popup,domain=asilmedia.org
+! Kosmetik
+asilmedia.org##.Catfish
+asilmedia.org###banner
+asilmedia.org##a[href*="yangi-kinolar.ru"]
+asilmedia.org##a[href*="yourbonus."]
+asilmedia.org##[class*="reklama" i]
+asilmedia.org##[id*="reklama" i]
+asilmedia.org##[class*="catfish" i]
+asilmedia.org##[id*="catfish" i]
+asilmedia.org##a[href*="1xbet"]
+asilmedia.org##a[href*="mostbet"]
+asilmedia.org##a[href*="22bet"]
+asilmedia.org##a[href*="1win"]
+asilmedia.org##a[href*="melbet"]
+asilmedia.org##a[href*="pin-up"]
+asilmedia.org##a[href*="betwinner"]
+asilmedia.org#$#.site-wrap { margin-top: 0 !important; }
+asilmedia.org#$#body { background-image: none !important; cursor: auto !important; }
+!
+!------------------------------------------------------------------
+! Bukmeker / kazino reklamalari (O'zbekiston va MDH saytlarida keng tarqalgan)
+! Faqat uchinchi tomon resurslari bloklanadi — saytning o'ziga kirish mumkin.
+!------------------------------------------------------------------
+||1xbet$third-party
+||1xslot$third-party
+||1win$third-party
+||mostbet$third-party
+||melbet$third-party
+||pin-up.$third-party
+||pinup.$third-party
+||betwinner$third-party
+||22bet$third-party
+||linebet$third-party
+||megapari$third-party
+||vavada$third-party
+||joycasino$third-party
+||888starz$third-party
+||parimatch$third-party
+||betandyou$third-party
+||dbbet.$third-party
+||olimpbet$third-party
+||leonbets$third-party
+||fonbet$third-party
+||melbet$third-party
+!
+!------------------------------------------------------------------
+! Video pre-roll (VAST/VPAID) serverlari — kino pleyerlarida
+!------------------------------------------------------------------
+||yandex.ru/ads/$third-party
+||an.yandex.ru^$third-party
+||yabs.yandex.ru^$third-party
+||ads.adfox.ru^
+||banners.adfox.ru^
+||adfox.yandex.ru^
+||betweendigital.com^
+||adriver.ru^
+||otm-r.com^
+||mediasniper.ru^
+||buzzoola.com^
+||videonow.ru^
+||moevideo.biz^
+||moevideo.net^
+||getintent.com^
+||hybrid.ai^
+||kadam.net^
+||admixer.net^
+||admixer.com^
+||adhigh.net^
+||nativeroll.tv^
+||vidroll.ru^
+||adlook.me^
+||viadata.store^
+||ad.mail.ru^
+||rs.mail.ru^
+||ads.vk.com^$third-party
+/vast.xml$xmlhttprequest,third-party
+/vast/*.xml$xmlhttprequest,third-party
+/vpaid.js$script,third-party
+/vpaid/*$script,third-party
+!
+!------------------------------------------------------------------
+! Popunder / push tarmoqlari
+!------------------------------------------------------------------
+||propellerads.com^
+||propellerclick.com^
+||popads.net^
+||popcash.net^
+||adsterra.com^
+||adsterratools.com^
+||highperformanceformat.com^
+||profitablecpmrate.com^
+||profitablegatecpm.com^
+||hilltopads.net^
+||clickadu.com^
+||monetag.com^
+||onclicka.com^
+||onclickalgo.com^
+||galaksion.com^
+||evadav.com^
+||richpush.co^
+||pushground.com^
+||realsrv.com^
+||magsrv.com^
+||exoclick.com^
+||juicyads.com^
+||trafficstars.com^
+||tsyndicate.com^
+||a-ads.com^
+||adcash.com^
+||admaven.com^
+!
+!------------------------------------------------------------------
+! Umumiy kosmetik qo'shimchalar (rus/o'zbek tilidagi saytlar uchun)
+!------------------------------------------------------------------
+##.reklama
+###reklama
+##.rklm
+###rklm
+##[class^="reklama-"]
+##[id^="reklama-"]
+##[class^="reklama_"]
+##[id^="reklama_"]
+##.Catfish
+##div[id^="yandex_rtb"]
+##div[id^="adfox_"]
+##div[id^="AdFox_"]
+##.yandex-rtb
+##ins.adsbygoogle

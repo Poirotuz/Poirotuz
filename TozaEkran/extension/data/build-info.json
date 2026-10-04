@@ -1,0 +1,23 @@
+{
+  "built": "2026-10-04T05:28:17.368Z",
+  "rulesets": [
+    {
+      "id": "easylist",
+      "count": 2692
+    },
+    {
+      "id": "cyrillic",
+      "count": 11213
+    },
+    {
+      "id": "toza",
+      "count": 35
+    }
+  ],
+  "genericSelectors": 14322,
+  "genericExcept": 692,
+  "specificDomains": 19917,
+  "popupDomains": 3563,
+  "adHosts": 47518,
+  "strictSites": 175
+}

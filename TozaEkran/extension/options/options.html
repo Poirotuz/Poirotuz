@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TozaEkran — sozlamalar</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header>
+    <div class="wrap head">
+      <img src="../icons/icon48.png" alt="">
+      <div>
+        <h1>TozaEkran</h1>
+        <p>Reklama bloklovchi — sozlamalar</p>
+      </div>
+      <label class="switch" title="Butun kengaytmani yoqish / o'chirish">
+        <input type="checkbox" id="globalToggle">
+        <span></span>
+      </label>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <h2>Statistika</h2>
+      <div class="grid3">
+        <div class="stat"><b id="tPopups">0</b><span>to'xtatilgan popup</span></div>
+        <div class="stat"><b id="tElements">0</b><span>olib tashlangan element</span></div>
+        <div class="stat"><b id="tRules">0</b><span>tarmoq qoidasi</span></div>
+      </div>
+      <button class="ghost" id="resetStats">Statistikani tozalash</button>
+    </section>
+
+    <section class="card">
+      <h2>Himoya o'chirilgan saytlar</h2>
+      <p class="muted">Bu saytlarda reklama bloklanmaydi. Biror sayt to'g'ri ishlamasa, uni shu ro'yxatga qo'shing.</p>
+      <form class="add" id="addDisabled">
+        <input type="text" placeholder="masalan: example.com" required>
+        <button>Qo'shish</button>
+      </form>
+      <ul class="list" id="disabledList"></ul>
+    </section>
+
+    <section class="card">
+      <h2>Qattiq popup rejimi</h2>
+      <p class="muted">Bu saytlardan ochiladigan barcha begona oynalar (popup / popunder) avtomatik yopiladi.
+        Siz o'zingiz bosgan havolalar ochilaveradi.</p>
+      <form class="add" id="addStrict">
+        <input type="text" placeholder="masalan: kino-sayt.uz" required>
+        <button>Qo'shish</button>
+      </form>
+      <ul class="list" id="strictList"></ul>
+      <details>
+        <summary>O'rnatilgan ro'yxat (<span id="builtinCount">0</span> ta sayt, jumladan asilmedia.org)</summary>
+        <p class="muted small" id="builtinList"></p>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Qo'lda yashirilgan elementlar</h2>
+      <p class="muted">"Reklamani tanlab o'chirish" orqali yaratilgan qoidalar. Qo'lda ham qo'shish mumkin (CSS selektor).</p>
+      <form class="add" id="addRule">
+        <input type="text" placeholder="sayt: asilmedia.org" required id="ruleSite">
+        <input type="text" placeholder="selektor: .banner-top" required id="ruleSel">
+        <button>Qo'shish</button>
+      </form>
+      <div id="rules"></div>
+    </section>
+
+    <section class="card">
+      <h2>Zaxira nusxa</h2>
+      <p class="muted">Sozlamalarni faylga saqlang yoki boshqa kompyuterdan yuklang.</p>
+      <div class="row">
+        <button id="exportBtn">Eksport (.json)</button>
+        <label class="btn ghost">Import<input type="file" id="importFile" accept=".json,application/json" hidden></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Filtr ro'yxatlari</h2>
+      <p class="muted" id="buildInfo"></p>
+      <p class="muted small">Filtrlar quyidagi ochiq ro'yxatlar asosida yaratilgan: EasyList (GPLv3 / CC BY-SA 3.0),
+        RuAdList (CC BY-SA 3.0), AdGuard Russian va AdGuard Base — xorijiy bo'lim (GPLv3), shuningdek
+        TozaEkran'ning o'z qoidalari (asilmedia.org, bukmeker reklamalari, video pre-roll serverlari).</p>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" hidden></div>
+  <script src="options.js"></script>
+</body>
+</html>
