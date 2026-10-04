@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "AdVanish — reklama bloklovchi",
   "short_name": "AdVanish",
-  "version": "1.0.2",
-  "description": "Saytlardagi barcha reklamalarni bloklaydi: bannerlar, popup oynalar, video-reklamalar. asilmedia.org va kino saytlari uchun maxsus himoya.",
+  "version": "1.0.3",
+  "description": "Bannerlar, popup oynalar va video-reklamalarni bloklaydi. Kino saytlari (asilmedia.org) uchun maxsus himoya.",
   "minimum_chrome_version": "111",
   "icons": {
     "16": "icons/icon16.png",
