@@ -1,4 +1,6 @@
-# Maxfiy kalit va pullik savollar bazasi ommaviy repoga tushmasligi kerak
+# Savollar bazasi va eski maxfiy kalit ommaviy repoga tushmasligi kerak
 input/
 dist/
 *.zip
+node_modules/
+.netlify/

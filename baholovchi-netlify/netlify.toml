@@ -1,0 +1,8 @@
+# Netlify sozlamalari. Netlify'da "Base directory" = baholovchi-netlify
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+  command = "echo 'Build kerak emas'"
+
+[functions]
+  node_bundler = "esbuild"

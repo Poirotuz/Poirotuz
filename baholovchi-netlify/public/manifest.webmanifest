@@ -1,7 +1,7 @@
 {
   "name": "Baholovchi Test",
   "short_name": "Baholovchi",
-  "description": "Baholovchilar uchun malaka testi: 1145 savol, bo‘limlar, imtihon rejimi.",
+  "description": "Baholovchilar uchun malaka testi: bo‘limlar, imtihon rejimi, xatolar ustida ishlash.",
   "lang": "uz",
   "id": "./",
   "start_url": "./",

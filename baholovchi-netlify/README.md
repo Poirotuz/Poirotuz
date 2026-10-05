@@ -1,77 +1,87 @@
-# Baholovchi Test — Netlify sayti
-
-Bu papkadagi `build.mjs` skripti «Baholovchi Test» dasturini va OVG parol generatorini
-Netlify Drop (https://app.netlify.com/drop) ga tashlashga tayyor saytga aylantiradi.
+# Baholovchi Test — login/parol tizimi (Netlify)
 
 | Manzil | Nima |
 |---|---|
-| `https://<sayt>.netlify.app/` | Test: foydalanuvchilar uchun. Telefonga ilova sifatida o'rnatiladi va internetsiz ham ochiladi |
-| `https://<sayt>.netlify.app/admin/` | Admin panel: parol yasash, foydalanuvchilar daftari, testga admin bo'lib kirish, admin parolini almashtirish |
+| `https://<sayt>.netlify.app/` | Test: foydalanuvchi **login va parol** bilan kiradi. Telefonga ilova sifatida o'rnatiladi va internetsiz ham ochiladi |
+| `https://<sayt>.netlify.app/admin/` | Admin panel: loginlar yaratish, muddat, bloklash, qurilmalar, natijalar va savollar bazasi |
 
-Admin panel AES-256-GCM bilan shifrlangan. Kalit admin parolidan PBKDF2-SHA256 (600 000 marta) orqali olinadi.
-Saytda maxfiy kalit faqat shifrlangan holda turadi, admin parolisiz uni ochib bo'lmaydi.
+Server qismi Netlify Functions'da (`netlify/functions/api.mjs`) ishlaydi.
+Ma'lumotlar Netlify Blobs xotirasida saqlanadi: foydalanuvchilar, natijalar va savollar.
+Savollar bazasi sahifa kodida turmaydi. Uni server faqat tizimga kirgan foydalanuvchiga beradi.
 
-## 1. Saytni birinchi marta joylash
+## 1. Saytni ishga tushirish (bir marta)
 
-1. https://app.netlify.com ga kiring yoki bepul ro'yxatdan o'ting. Akkauntsiz tashlangan sayt 1 soatdan keyin o'chib ketadi.
-2. `Baholovchi_Netlify.zip` ni oching (Extract). Ichida `index.html`, `admin/`, `icons/` va boshqa fayllar bor.
-3. Ochilgan papkani https://app.netlify.com/drop sahifasiga sudrab tashlang.
-4. Darhol **Site configuration → Change site name** bo'limida nomni o'zgartiring (masalan `baholovchi-test`).
-   Buni foydalanuvchilarga havola berishdan **oldin** qiling.
+Netlify Drop (sudrab tashlash) bilan server qismi ishlamaydi, shuning uchun sayt GitHub orqali ulanadi:
 
-> Muhim: sayt manzili (domen) o'zgarsa, barcha foydalanuvchilarning Qurilma ID si ham o'zgaradi
-> va berilgan parollar ishlamay qoladi. Nomni bir marta, boshida qo'ying.
+1. https://app.netlify.com → **Add new project → Import an existing project → GitHub**.
+2. GitHub'ga ruxsat bering va **Poirotuz/Poirotuz** repozitoriysini tanlang.
+3. Sozlamalar:
+   - **Branch to deploy:** `claude/charming-shannon-gthq6j`
+   - **Base directory:** `baholovchi-netlify`
+   - Build command va Publish directory'ni bo'sh qoldiring (ular `netlify.toml` dan olinadi).
+4. **Add environment variables → Add a single variable:**
+   - Key: `ADMIN_PASSWORD`
+   - Value: o'zingiz o'ylab topgan kuchli parol (kamida 8, yaxshisi 12+ belgi)
+5. **Deploy** tugmasini bosing va 1–2 daqiqa kuting.
+6. **Site configuration → Change site name** orqali nom bering (masalan `baholovchi-test`).
+7. `https://<nom>.netlify.app/admin/` ni oching va admin paroli bilan kiring.
+8. **Savollar** bo'limida `Baholovchi_Test_v4.1_1145savol.html` faylini tanlang.
+   Savollar va 20 ta demo savol fayldan avtomatik olinadi. Bu bir martalik ish.
 
-## 2. Yangi foydalanuvchiga parol berish
+> Agar oldin Netlify Drop bilan sayt yaratgan bo'lsangiz, manzilni saqlab qolish uchun yangi sayt ochmasdan
+> **Site configuration → Build & deploy → Link repository** orqali o'sha saytni GitHub'ga ulashingiz mumkin.
 
-1. `…/admin/` ni oching va admin parolini kiriting.
-2. «Taklif matnini nusxalash» tugmasini bosib, matnni foydalanuvchiga Telegram orqali yuboring.
-3. Foydalanuvchi saytda «Kalit bilan kirish» ni bosadi va Qurilma ID sini sizga yuboradi.
-4. «Yangi parol yasash» bo'limida ID, ism va muddatni kiriting. Keyin «Xabar matni bilan nusxalash» ni bosib, matnni yuboring.
+## 2. Yangi foydalanuvchi
 
-Parol faqat ID olingan qurilma va brauzerda ishlaydi. Berilgan parollarning hammasi daftarda saqlanadi:
-qidirish mumkin, CSV (Excel) yoki JSON ko'rinishida yuklab olish mumkin.
+Admin panel → **Foydalanuvchilar → Yangi foydalanuvchi**:
 
-## 3. Testni boshqarish
+1. Ismni yozing. Login ismdan avtomatik yasaladi, parol ham tayyor turadi (ikkalasini o'zgartirish mumkin).
+2. Muddatni (30 kun … cheksiz yoki aniq sana) va qurilmalar sonini tanlang (odatda 1).
+3. **Login yaratish** → **Xabar matnini nusxalash** ni bosib, matnni Telegram'da yuboring.
+   Xabarda sayt manzili, login, parol va muddat bor.
 
-Admin panelda «Testni admin sifatida ochish» tugmasini bosing. Shu qurilma uchun cheksiz Admin parol yasaladi
-va test admin rejimida ochiladi: statistika, kalitni tekshirish va natijalarni tozalash ishlaydi.
+## 3. Boshqarish
 
-## 4. Saytni yangilash
+Har bir foydalanuvchi kartasida quyidagilar ko'rinadi: muddat, qurilmalar, oxirgi kirish va natijalar
+(o'tilgan bo'limlar, o'rtacha %, imtihonlar). Kartadan bajariladigan amallar:
 
-Yangi sayt yaratmang. Netlify'da o'z saytingizni oching, **Deploys** bo'limiga kiring va yangilangan papkani
-pastdagi «Drag and drop» maydoniga tashlang. Manzil o'zgarmaydi, foydalanuvchilarning parollari ishlashda davom etadi.
+- **Tahrirlash:** ism, telefon, izoh, muddat (+30/+90/+180/+365 kun tugmalari), qurilmalar soni, rol.
+- **Yangi parol:** eski parol darhol ishlamay qoladi.
+- **Bloklash / Faollashtirish:** bloklangan foydalanuvchi testdan darhol chiqariladi (15 daqiqa ichida).
+- **Qurilmalarni tozalash:** foydalanuvchi telefonini almashtirganda kerak bo'ladi.
+- **O'chirish.**
+- **Excel (CSV):** butun ro'yxatni yuklab olish.
 
-## 5. Admin parolini almashtirish
+Bitta login bir vaqtda ko'rsatilgan sondagi qurilmada ishlaydi (standart: 1 ta).
+Login boshqa qurilmada ochilsa, "limit to'lgan" degan xabar chiqadi.
+Shu tufayli loginni boshqalarga berib bo'lmaydi.
 
-1. Admin panelning eng pastidagi bo'limda joriy parolni va yangi parolni (2 marta) kiriting.
-2. Yuklab olingan `index.html` ni papkadagi `admin/index.html` o'rniga qo'ying.
-3. Papkani 4-banddagidek **Deploys** bo'limiga qayta tashlang.
+**Savollar** bo'limida savolni raqami yoki matni bo'yicha topib tahrirlash, yangisini qo'shish,
+o'chirish va demo ro'yxatini o'zgartirish mumkin. **Serverga saqlash** dan keyin foydalanuvchilar
+yangi bazani avtomatik oladi.
 
-## Bilish kerak bo'lgan cheklovlar
+**Sozlamalar → Testni admin sifatida ochish:** shu qurilmada testga admin bo'lib kirish (login/parolsiz).
 
-- Sayt statik, server yo'q. Parol tekshiruvi brauzerda bajariladi. Savollar bazasi sahifa ichida turadi
-  (avval fayl ko'rinishida tarqatilgandagidek). Brauzerda «Sahifa kodini ko'rish» ni bosgan odam uni ko'ra oladi.
-- Oddiy «login + qisqa parol» (istalgan qurilmadan kirish) uchun server va ma'lumotlar bazasi kerak.
-  Netlify Drop buni qo'llamaydi.
-- iPhone'da Safari va bosh ekrandagi ilovaning xotirasi alohida. Shu sababli foydalanuvchi Qurilma ID ni
-  qayerda ishlatmoqchi bo'lsa, o'sha yerdan olishi kerak (dastur buni iPhone'da o'zi eslatadi).
-- Fayl ko'rinishidagi eski versiyada berilgan parollar saytda ishlamaydi, chunki Qurilma ID boshqacha bo'ladi.
-  Bu foydalanuvchilarga saytda yangi parol yasab berish kerak. Eski fayllar esa avvalgidek ishlayveradi.
-- Daftar admin brauzerida saqlanadi. Boshqa qurilmaga «Zaxira (JSON)» → «Zaxiradan tiklash» orqali o'tkaziladi.
+## 4. Admin parolini o'zgartirish
 
-## Qayta yig'ish (dasturchi uchun)
+1. Netlify → saytingiz → **Site configuration → Environment variables → ADMIN_PASSWORD → Edit**.
+2. **Deploys → Trigger deploy → Deploy site**.
 
-```bash
-# input/ papkasiga asl fayllarni qo'ying (ular git'ga tushmaydi):
-#   input/Baholovchi_Test.html, input/OVG_Parol_generatori_ADMIN.html
-ADMIN_PASSWORD='kuchli-parol' node build.mjs
-# yoki parolsiz: tasodifiy kuchli parol yaratiladi va konsolga chiqariladi
-node build.mjs --test yo'l/test.html --keys yo'l/generator.html
-```
+## Xarajat (Netlify bepul tarifi)
 
-Natija: `dist/site/` (Netlify'ga tashlanadigan papka) va `dist/Baholovchi_Netlify.zip`.
-Skript maxfiy kalit test faylidagi ochiq kalitga mosligini tekshiradi. Kalit ochiq holda qolsa, skript to'xtaydi.
+Bepul tarifda oyiga 300 kredit beriladi. Har bir deploy 15 kredit turadi.
+Foydalanuvchi qo'shish, savollarni tahrirlash va boshqa admin amallari deploy talab qilmaydi.
+Deploy faqat sayt kodi o'zgarganda kerak bo'ladi. Odatiy foydalanishda kredit yetadi.
+Netlify → **Usage** bo'limida sarfni kuzatish mumkin.
 
-Repoga faqat skript va shablonlar kiradi. Maxfiy kalit, savollar bazasi va tayyor sayt (`input/`, `dist/`)
-`.gitignore` orqali chiqarib tashlangan.
+## Texnik ma'lumot
+
+- `public/`: test (`index.html`), admin panel (`admin/index.html`), PWA fayllari, `_headers` (CSP va boshqa xavfsizlik sarlavhalari).
+- `netlify/functions/api.mjs`: barcha `/api/*` so'rovlar.
+- Parollar scrypt bilan xeshlanadi. Sessiya tokenlari xeshlangan holda saqlanadi.
+- Kirish urinishlari cheklangan: bitta login uchun 8 marta xato bo'lsa, 15 daqiqaga qulflanadi.
+  IP bo'yicha ham cheklov bor (admin uchun 10, foydalanuvchilar uchun 30 xato / 15 daqiqa).
+- Natijalar qurilmada saqlanadi va serverga ham yuboriladi (adminga ko'rinadi).
+  Test internetsiz ham ishlaydi. Login holati internet bo'lganda tekshiriladi.
+- Lokal sinov: `npm install`, keyin `ADMIN_PASSWORD=... npx netlify dev`.
+- `input/` (asl fayllar) va `dist/` repoga kirmaydi.

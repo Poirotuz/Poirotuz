@@ -1,0 +1,10 @@
+{
+  "name": "baholovchi-test",
+  "version": "5.0.0",
+  "private": true,
+  "description": "Baholovchi Test: login/parol tizimi bilan Netlify sayti",
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^11.1.3"
+  }
+}

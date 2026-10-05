@@ -1,7 +1,7 @@
 /* Baholovchi Test — service worker.
    Tarmoq birinchi: internet bo'lsa har doim saytning eng yangi versiyasi olinadi,
-   internet bo'lmasa oxirgi saqlangan nusxa ochiladi. /admin/ keshlanmaydi. */
-var CACHE = 'ovg-test-v1';
+   internet bo'lmasa oxirgi saqlangan nusxa ochiladi. /api/ va /admin/ keshlanmaydi. */
+var CACHE = 'ovg-test-v2';
 var CORE = ['./', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', function (e) {
@@ -19,7 +19,7 @@ self.addEventListener('fetch', function (e) {
   if (req.method !== 'GET') return;
   var url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.indexOf('/admin') === 0) return;
+  if (url.pathname.indexOf('/api/') === 0 || url.pathname.indexOf('/admin') === 0) return;
   e.respondWith(fetch(req).then(function (res) {
     if (res.ok && res.type === 'basic') {
       var copy = res.clone();

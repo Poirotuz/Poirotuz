@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="description" content="Baholovchilar uchun malaka testi: boʼlimlar, imtihon rejimi, xatolar ustida ishlash.">
+<meta name="apple-mobile-web-app-title" content="Baholovchi">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Baholovchi Test</title>
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0a0f;--s1:#111118;--s2:#18181f;--s3:#1f1f28;
+  --bd:#2a2a38;--bd2:#3a3a50;
+  --tx:#e8e8f2;--mu:#6b6b88;--mu2:#9999bb;
+  --gr:#00c87a;--rd:#ff3a5c;--yl:#f5a623;--bl:#4a90d9;--pu:#8b5cf6;
+  --r:14px;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Tahoma,sans-serif;font-size:15px}
+.pg{display:none;position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column}
+.pg.on{display:flex}
+
+/* ── LOAD ── */
+#pLoad{align-items:center;justify-content:center;gap:16px;background:var(--bg)}
+.sp{width:44px;height:44px;border:3px solid var(--bd2);border-top-color:var(--yl);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── WELCOME / DEVICE BIND ── */
+#pWelcome{background:radial-gradient(ellipse at 50% 0%,#1a0f28,var(--bg) 70%);align-items:center;justify-content:center;padding:20px}
+.wbox{background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:28px 22px;width:100%;max-width:360px;text-align:center}
+.wlogo{font-size:2.8rem;margin-bottom:8px}
+.wtit{font-size:1.3rem;font-weight:800;margin-bottom:4px}
+.wsub{font-size:.78rem;color:var(--mu);margin-bottom:24px;line-height:1.5}
+.wbtns{display:flex;flex-direction:column;gap:10px}
+.wbtn{padding:14px;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer;border:none;transition:opacity .2s}
+.wbtn:active{opacity:.8}
+.wbtn.demo{background:var(--s3);border:1.5px solid var(--bd2);color:var(--tx)}
+.wbtn.login{background:linear-gradient(135deg,var(--yl),#e07020);color:#111}
+.wbtn.activate{background:linear-gradient(135deg,var(--pu),#6030c0);color:#fff}
+
+/* ── DEVICE ACTIVATION ── */
+#pActivate{background:var(--bg);align-items:center;justify-content:flex-start;padding:20px;padding-top:40px}
+.abox{background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:28px 22px;width:100%;max-width:380px;text-align:center}
+.atit{font-size:1.1rem;font-weight:800;margin-bottom:16px}
+.ainfo{background:rgba(74,144,217,.1);border:1px solid rgba(74,144,217,.3);border-radius:10px;padding:12px 14px;font-size:.8rem;color:var(--bl);line-height:1.5;margin-bottom:18px;text-align:left}
+.device-id-box{background:var(--s3);border:2px dashed rgba(255,58,92,.4);border-radius:10px;padding:14px;margin-bottom:14px}
+.did-label{font-size:.68rem;color:var(--mu);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.did-val{font-family:monospace;font-size:1.1rem;font-weight:900;color:var(--rd);letter-spacing:2px}
+.copy-btn{background:var(--s2);border:1px solid var(--bd2);color:var(--mu2);border-radius:8px;padding:7px 14px;font-size:.78rem;cursor:pointer;margin-top:8px;display:inline-flex;align-items:center;gap:6px}
+.copy-btn:active{opacity:.7}
+.fg{text-align:left;margin-bottom:12px}
+.fg label{display:block;font-size:.72rem;color:var(--mu2);font-weight:700;letter-spacing:.5px;margin-bottom:6px}
+.fg input{width:100%;background:var(--s3);border:1.5px solid var(--bd2);border-radius:10px;padding:13px 14px;color:var(--tx);font-size:.95rem;outline:none}
+.fg input:focus{border-color:var(--yl)}
+.fg input::placeholder{color:var(--mu)}
+.bm{width:100%;background:linear-gradient(135deg,var(--yl),#e0722a);color:#111;border:none;border-radius:12px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:4px}
+.bm:active{opacity:.85}
+.bm.sec{background:linear-gradient(135deg,var(--pu),#6030c0);color:#fff}
+.aerr{color:var(--rd);font-size:.8rem;margin-top:10px;min-height:18px;text-align:center}
+.aback{background:none;border:none;color:var(--mu2);font-size:.82rem;cursor:pointer;margin-top:14px;text-decoration:underline}
+
+/* ── LOGIN ── */
+#pLogin{background:radial-gradient(ellipse at 50% 0%,#1a0f28,var(--bg) 70%);align-items:center;justify-content:center;padding:20px}
+.lbox{background:var(--s1);border:1px solid var(--bd);border-radius:20px;padding:32px 24px;width:100%;max-width:340px;text-align:center}
+.logo{font-size:2.5rem;margin-bottom:8px}
+.ltit{font-size:1.35rem;font-weight:800;margin-bottom:4px}
+.lsub{font-size:.78rem;color:var(--mu);margin-bottom:28px;line-height:1.4}
+.lerr{color:var(--rd);font-size:.8rem;margin-top:10px;min-height:18px;text-align:center}
+
+/* ── HOME ── */
+#pHome{background:var(--bg);padding:0}
+.hdr{background:var(--s1);border-bottom:1px solid var(--bd);padding:14px 16px 12px;flex-shrink:0}
+.htop{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.htit{font-size:1rem;font-weight:800}
+.ubadge{background:var(--s3);border:1px solid var(--bd2);border-radius:20px;padding:4px 11px;font-size:.72rem;color:var(--mu2)}
+.demo-banner{background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(74,144,217,.1));border:1px solid rgba(139,92,246,.3);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.78rem;color:var(--mu2);line-height:1.5;text-align:center}
+.demo-banner b{color:var(--pu)}
+.hst{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.hsc{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:9px;text-align:center}
+.hsc-n{font-size:1.25rem;font-weight:900;color:var(--yl)}
+.hsc-l{font-size:.62rem;color:var(--mu);margin-top:2px}
+.hbody{flex:1;overflow-y:auto;padding:14px}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.scard{background:var(--s1);border:1.5px solid var(--bd);border-radius:var(--r);padding:14px 12px;cursor:pointer;transition:transform .15s;position:relative;overflow:hidden}
+.scard:active{transform:scale(.96)}
+.scard.done{border-color:#254535}
+.scard.locked{opacity:.5;cursor:not-allowed}
+.scard.locked::after{content:'\uD83D\uDD12';position:absolute;top:10px;right:10px;font-size:1rem}
+.scn{font-size:1.7rem;font-weight:900;color:var(--yl);line-height:1}
+.sct{font-size:.72rem;color:var(--mu2);margin-top:3px}
+.scr2{font-size:.68rem;color:var(--mu)}
+.scs{font-size:.78rem;font-weight:700;margin-top:7px}
+.scs.p{color:var(--gr)}.scs.f{color:var(--rd)}
+.scbar{height:3px;background:var(--bd);border-radius:2px;margin-top:5px}
+.scbf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gr),#60ffb0)}
+.hfoot{padding:10px 14px;background:var(--s1);border-top:1px solid var(--bd);flex-shrink:0;display:flex;gap:8px;flex-wrap:wrap}
+.bsec{flex:1;min-width:80px;border:1.5px solid var(--bd2);background:var(--s2);color:var(--tx);border-radius:11px;padding:10px 8px;font-size:.78rem;font-weight:700;cursor:pointer}
+.bsec:active{opacity:.75}
+.bsec.rd{border-color:rgba(255,58,92,.35);color:var(--rd)}
+.bsec.pu{border-color:rgba(139,92,246,.35);color:var(--pu)}
+.bsec.tg{background:linear-gradient(135deg,#0088cc,#006aa8);border-color:#0088cc;color:#fff}
+
+/* ── TEST ── */
+#pTest{background:var(--bg);padding:0}
+.thdr{background:var(--s1);border-bottom:1px solid var(--bd);padding:10px 14px;flex-shrink:0;display:flex;align-items:center;gap:10px}
+.bbk{background:var(--s3);border:1px solid var(--bd2);color:var(--tx);border-radius:8px;padding:7px 11px;font-size:.78rem;cursor:pointer;flex-shrink:0;white-space:nowrap}
+.bbk:active{opacity:.7}
+.thi{flex:1;min-width:0}
+.tht{font-weight:700;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ths{font-size:.68rem;color:var(--mu)}
+.tmr{background:var(--s3);border:1px solid var(--bd2);border-radius:8px;padding:6px 10px;text-align:center;flex-shrink:0;min-width:58px}
+.tv{font-size:1rem;font-weight:900;font-family:monospace;color:#ffd60a;line-height:1.2}
+.tv.w{color:var(--rd);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.tl2{font-size:.55rem;color:var(--mu)}
+.prow{background:var(--s1);padding:7px 14px;border-bottom:1px solid var(--bd);flex-shrink:0}
+.pbar{background:var(--bd);border-radius:3px;height:4px}
+.pbf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gr),#7fffbf);transition:width .3s}
+.ptx{font-size:.62rem;color:var(--mu);margin-top:3px;text-align:right}
+.qnav{background:var(--s1);border-bottom:1px solid var(--bd);padding:7px 12px;display:flex;gap:4px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.qnav::-webkit-scrollbar{display:none}
+.qd{flex-shrink:0;width:26px;height:26px;border-radius:6px;background:var(--s3);border:1px solid var(--bd2);font-size:.6rem;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--mu);transition:all .12s}
+.qd.a{background:#152535;border-color:#2a4a6a;color:var(--bl)}
+.qd.c{border-color:var(--yl);color:var(--yl);font-weight:700}
+.qd.ok{background:rgba(0,200,122,.12);border-color:var(--gr);color:var(--gr)}
+.qd.ng{background:rgba(255,58,92,.12);border-color:var(--rd);color:var(--rd)}
+.qa{flex:1;overflow-y:auto;padding:12px;-webkit-overflow-scrolling:touch}
+.qcard{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.qno{font-size:.62rem;color:var(--mu);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px}
+.qtx{font-size:.92rem;line-height:1.65;color:var(--tx)}
+.tt{border-bottom:1.5px dashed var(--yl);cursor:pointer;color:var(--yl);display:inline}
+.ttpop{display:none;position:fixed;background:var(--s1);border:1px solid var(--yl);border-radius:12px;padding:14px 16px;font-size:.82rem;color:var(--tx);z-index:9999;width:272px;max-width:92vw;line-height:1.55;box-shadow:0 8px 32px rgba(0,0,0,.75);pointer-events:none}
+.ttpop.on{display:block}
+.ttp-t{font-weight:800;color:var(--yl);margin-bottom:6px;font-size:.88rem}
+.ttp-b{color:var(--tx);line-height:1.55}
+.ttp-s{font-size:.7rem;color:var(--mu);margin-top:8px;padding-top:6px;border-top:1px solid var(--bd)}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{background:var(--s2);border:1.5px solid var(--bd2);border-radius:12px;padding:12px 13px;cursor:pointer;display:flex;align-items:flex-start;gap:10px;text-align:left;width:100%;color:var(--tx);font-size:.87rem;line-height:1.5;position:relative;transition:border-color .15s}
+.opt:active:not([disabled]){opacity:.8}
+.opt-l{width:27px;height:27px;border-radius:50%;background:var(--bd2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:2px;transition:background .15s}
+.opt-t{flex:1}
+.opt-i{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:1rem;font-weight:900;pointer-events:none}
+.opt.ok{border-color:var(--gr);background:rgba(0,200,122,.09)}
+.opt.ok .opt-l{background:var(--gr);color:#000}
+.opt.ng{border-color:var(--rd);background:rgba(255,58,92,.09)}
+.opt.ng .opt-l{background:var(--rd);color:#fff}
+.opt.sel{border-color:var(--yl);background:rgba(245,166,35,.07)}
+.opt.sel .opt-l{background:var(--yl);color:#000}
+.opt[disabled]{cursor:default}
+.hint{background:rgba(0,200,122,.09);border:1px solid rgba(0,200,122,.25);border-radius:10px;padding:10px 13px;font-size:.82rem;color:var(--gr);margin-top:8px;line-height:1.5;display:none}
+.hint.on{display:block}
+.hint b{color:#00ffaa}
+.shwbtn{background:var(--s3);border:1.5px solid var(--bd2);color:var(--mu2);border-radius:10px;padding:10px 14px;font-size:.8rem;cursor:pointer;margin-top:8px;width:100%;text-align:center}
+.shwbtn:active{opacity:.7}
+.tfoot{background:var(--s1);border-top:1px solid var(--bd);padding:10px 13px;display:flex;gap:8px;align-items:center;flex-shrink:0}
+.fnv{background:var(--s2);border:1.5px solid var(--bd2);color:var(--tx);border-radius:11px;padding:11px 14px;cursor:pointer;font-size:.83rem;font-weight:700;flex:1;max-width:110px}
+.fnv:disabled{opacity:.3;cursor:default}
+.fnv:active:not(:disabled){opacity:.75}
+.fnv.pr{background:linear-gradient(135deg,var(--yl),#e07020);border:none;color:#111;max-width:120px}
+.fctr{flex:1;text-align:center;font-size:.78rem;color:var(--mu)}
+
+/* ── RESULT ── */
+#pRes{background:radial-gradient(ellipse at 50% 0%,#1a0f28,var(--bg) 70%);padding:0}
+.rbody{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.remj{font-size:3.5rem;text-align:center}
+.rtit{font-size:1.7rem;font-weight:900;text-align:center}
+.rtit.p{color:var(--gr)}.rtit.f{color:var(--rd)}
+.rsub{font-size:.82rem;color:var(--mu);text-align:center}
+.ring{width:140px;height:140px;border-radius:50%;border:6px solid var(--bd2);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring.p{border-color:var(--gr);box-shadow:0 0 28px rgba(0,200,122,.18)}
+.ring.f{border-color:var(--rd);box-shadow:0 0 28px rgba(255,58,92,.18)}
+.rn{font-size:2.4rem;font-weight:900;line-height:1}
+.rd2{font-size:.88rem;color:var(--mu)}
+.st3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;max-width:380px}
+.stc{background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:12px;text-align:center}
+.stc-n{font-size:1.45rem;font-weight:900}
+.stc-l{font-size:.62rem;color:var(--mu);margin-top:3px}
+.stc.ok .stc-n{color:var(--gr)}.stc.ng .stc-n{color:var(--rd)}.stc.tm .stc-n{color:#ffd60a}
+.rmsg{background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:13px 15px;width:100%;max-width:380px;font-size:.83rem;color:var(--mu);line-height:1.6;text-align:center}
+.wblk{width:100%;max-width:380px}
+.wh{font-size:.83rem;color:var(--rd);font-weight:700;margin-bottom:7px}
+.wi{background:rgba(255,58,92,.06);border:1px solid rgba(255,58,92,.18);border-radius:10px;padding:10px 11px;margin-bottom:6px}
+.wiq{font-size:.7rem;color:var(--mu);margin-bottom:3px}
+.wiy{font-size:.78rem;color:var(--rd)}
+.wir{font-size:.78rem;color:var(--gr);font-weight:600}
+.rbtns{display:flex;flex-direction:column;gap:8px;width:100%;max-width:380px;padding-bottom:20px}
+.rbtn{padding:13px;border-radius:12px;font-size:.92rem;font-weight:700;cursor:pointer;border:1.5px solid var(--bd2);background:var(--s2);color:var(--tx)}
+.rbtn:active{opacity:.8}
+.rbtn.pr{background:linear-gradient(135deg,var(--yl),#e07020);border:none;color:#111}
+.rbtn.rd{border-color:rgba(255,58,92,.35);color:var(--rd);background:rgba(255,58,92,.06)}
+.rbtn.pu{border-color:rgba(139,92,246,.35);color:var(--pu);background:rgba(139,92,246,.06)}
+.rbtn.tg{background:linear-gradient(135deg,#0088cc,#006aa8);border:none;color:#fff}
+
+/* ── ADMIN ── */
+#pAdm{background:var(--bg);padding:0}
+.ahdr{background:var(--s1);border-bottom:1px solid var(--bd);padding:13px 15px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ahdr-t{font-size:.95rem;font-weight:800;color:var(--yl)}
+.abody{flex:1;overflow-y:auto;padding:13px;gap:11px;display:flex;flex-direction:column}
+.acard{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:15px}
+.acard h3{font-size:.78rem;color:var(--mu2);font-weight:700;margin-bottom:11px;text-transform:uppercase;letter-spacing:.5px}
+.grow{display:flex;gap:7px;margin-bottom:8px;flex-wrap:wrap}
+.ginp{flex:1;min-width:110px;background:var(--s3);border:1.5px solid var(--bd2);border-radius:9px;padding:9px 12px;color:var(--tx);font-size:.83rem;outline:none}
+.ginp:focus{border-color:var(--yl)}
+.gbtn{background:var(--s3);border:1.5px solid var(--bd2);color:var(--tx);border-radius:9px;padding:9px 13px;cursor:pointer;font-size:.8rem;font-weight:700;white-space:nowrap}
+.gbtn.g{border-color:rgba(245,166,35,.4);color:var(--yl);background:rgba(245,166,35,.07)}
+.gbtn.rd{border-color:rgba(255,58,92,.4);color:var(--rd);background:rgba(255,58,92,.07)}
+.gbtn:active{opacity:.7}
+.plist{display:flex;flex-direction:column;gap:5px;max-height:240px;overflow-y:auto}
+.prow2{background:var(--s3);border:1px solid var(--bd2);border-radius:8px;padding:8px 11px;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;gap:6px;flex-wrap:wrap}
+.pcode{font-family:monospace;font-weight:700;color:var(--yl);letter-spacing:1px;flex-shrink:0}
+.pname{color:var(--mu2);flex:1;min-width:60px}
+.pbind{font-size:.65rem;padding:2px 7px;border-radius:20px;flex-shrink:0}
+.pbind.bound{background:rgba(0,200,122,.13);color:var(--gr)}
+.pbind.free{background:rgba(245,166,35,.13);color:var(--yl)}
+.padm-btns{display:flex;gap:4px;flex-shrink:0}
+.pdel,.prst{background:none;border:none;cursor:pointer;font-size:.85rem;padding:3px 7px;border-radius:6px}
+.pdel{color:var(--rd)}
+.prst{color:var(--bl);background:rgba(74,144,217,.1)}
+.stbl{width:100%;font-size:.76rem;border-collapse:collapse}
+.stbl th{color:var(--mu);font-weight:600;padding:6px 7px;text-align:left;border-bottom:1px solid var(--bd)}
+.stbl td{padding:7px 7px;border-bottom:1px solid var(--bd);color:var(--tx)}
+.stbl tr:last-child td{border-bottom:none}
+.gst{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.gsi{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:11px;text-align:center}
+.gsi-n{font-size:1.35rem;font-weight:900;color:var(--yl)}
+.gsi-l{font-size:.62rem;color:var(--mu);margin-top:2px}
+.bdg{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.62rem;font-weight:700}
+.bdg.p{background:rgba(0,200,122,.13);color:var(--gr)}
+.bdg.f{background:rgba(255,58,92,.13);color:var(--rd)}
+.sec-warn{background:rgba(255,58,92,.08);border:1px solid rgba(255,58,92,.25);border-radius:10px;padding:12px 14px;font-size:.8rem;color:var(--rd);line-height:1.5;margin-bottom:8px}
+
+/* ── v4 QO'SHIMCHA ── */
+.lockbox{grid-column:1 / -1;background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.22);
+  border-radius:var(--r);padding:14px;font-size:.8rem;color:var(--mu2);line-height:1.6;text-align:center}
+.licexp{background:rgba(0,200,122,.08);border:1px solid rgba(0,200,122,.22);border-radius:10px;
+  padding:8px 12px;font-size:.72rem;color:var(--gr);margin-bottom:10px;text-align:center}
+.bsec.ex{border-color:rgba(139,92,246,.4);color:var(--pu);background:rgba(139,92,246,.08)}
+#actKey{width:100%;background:var(--s3);border:1.5px solid var(--bd2);border-radius:11px;
+  padding:11px 13px;color:var(--tx);font-size:.78rem;font-family:monospace;outline:none;resize:vertical;
+  line-height:1.5;word-break:break-all}
+#actKey:focus{border-color:var(--pu)}
+.tglink{display:block;margin-top:14px;color:var(--bl);font-size:.82rem;text-decoration:none}
+.did-val{user-select:all;-webkit-user-select:all}
+.qa,.opts{-webkit-user-select:none;user-select:none}
+.storewarn{position:fixed;left:0;right:0;bottom:0;z-index:99;background:rgba(255,58,92,.14);
+  border-top:1px solid rgba(255,58,92,.4);color:var(--rd);font-size:.72rem;padding:8px 12px;
+  text-align:center;line-height:1.5}
+.pwinp{width:100%;background:var(--s3);border:1.5px solid var(--bd2);border-radius:11px;padding:11px 13px;
+  color:var(--tx);font-family:monospace;font-size:.8rem;letter-spacing:1px;outline:none;resize:vertical;
+  line-height:1.55;word-break:break-all}
+.pwinp:focus{border-color:var(--pu)}
+.pwhint{font-size:.68rem;color:var(--mu);margin-top:6px;line-height:1.4}
+
+/* ── v5: login ── */
+#pLogin .fg input{font-size:1rem}
+.pwrap{position:relative}
+.pwrap input{padding-right:48px}
+.pweye{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--mu2);
+  font-size:1.1rem;cursor:pointer;padding:8px}
+.lbox .bm{margin-top:6px}
+.lbox .aback{display:block;margin:14px auto 0}
+#wMsg{margin-top:12px}
+</style>
+</head>
+<body>
+<div id="pLoad" class="pg on"><div class="sp"></div><p id="loadMsg" style="color:var(--mu);font-size:.85rem">Yuklanmoqda...</p></div>
+<!-- WELCOME -->
+<div id="pWelcome" class="pg">
+  <div class="wbox">
+    <div class="wlogo">&#x1F4CB;</div>
+    <div class="wtit">Baholovchi Test</div>
+    <div class="wsub">O&#x2bc;zbekiston Respublikasi &middot; Baholash faoliyati<br><span id="appVer"></span></div>
+    <div class="wbtns">
+      <button class="wbtn login" onclick="pg('pLogin')">&#x1F510; Kirish (login va parol)</button>
+      <button class="wbtn demo" onclick="startDemo()">&#x1F441; Demo rejim</button>
+    </div>
+    <div class="aerr" id="wMsg"></div>
+    <div style="margin-top:16px;font-size:.72rem;color:var(--mu);line-height:1.6">
+      &#x1F512; Login va parolni admin beradi<br>
+      <a href="https://t.me/Orientconsulting" target="_blank" rel="noopener" style="color:var(--bl);text-decoration:none">&#x1F4AC; Admin bilan bog&#x2bc;lanish (Telegram)</a>
+    </div>
+  </div>
+</div>
+<!-- LOGIN -->
+<div id="pLogin" class="pg">
+  <form class="lbox" id="lgForm" onsubmit="doLogin();return false;" autocomplete="on">
+    <div class="logo">&#x1F510;</div>
+    <div class="ltit">Tizimga kirish</div>
+    <div class="lsub">Admin bergan login va parolni kiriting</div>
+    <div class="fg"><label>LOGIN</label>
+      <input type="text" id="lgLogin" name="username" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="masalan: sardor.aliyev"></div>
+    <div class="fg"><label>PAROL</label>
+      <div class="pwrap"><input type="password" id="lgPass" name="password" autocomplete="current-password" placeholder="Parol">
+      <button type="button" class="pweye" onclick="togglePw()" aria-label="Parolni ko&#x2bc;rsatish">&#x1F441;</button></div></div>
+    <button type="submit" class="bm" id="lgBtn">Kirish</button>
+    <div class="lerr" id="lgErr"></div>
+    <button type="button" class="aback" onclick="pg('pWelcome')">&#x2190; Orqaga</button>
+    <a href="https://t.me/Orientconsulting" target="_blank" rel="noopener" class="tglink">&#x1F4AC; Login olish uchun admin bilan bog&#x2bc;lanish</a>
+  </form>
+</div>
+<!-- HOME -->
+<div id="pHome" class="pg">
+  <div class="hdr">
+    <div class="htop"><div class="htit">&#x1F4CB; Baholovchi Test</div><div class="ubadge" id="ubadge">...</div></div>
+    <div id="demoBanner" style="display:none" class="demo-banner">
+      <b>Demo rejim</b> &mdash; 20 ta namuna savol<br>To&#x2bc;liq versiya uchun admin bilan bog&#x2bc;laning
+    </div>
+    <div id="licExp" class="licexp" style="display:none"></div>
+    <div class="hst">
+      <div class="hsc"><div class="hsc-n" id="hsTot">1145</div><div class="hsc-l">Jami savol</div></div>
+      <div class="hsc"><div class="hsc-n" id="hsPass" style="color:var(--gr)">0/23</div><div class="hsc-l">O&#x2bc;tilgan</div></div>
+      <div class="hsc"><div class="hsc-n" id="hsPct" style="color:var(--bl)">&#x2014;</div><div class="hsc-l">O&#x2bc;rtacha</div></div>
+    </div>
+  </div>
+  <div class="hbody"><div class="sgrid" id="sgrid"></div></div>
+  <div class="hfoot">
+    <button class="bsec ex" id="btnExam" onclick="startExam()">&#x1F393; Imtihon (50 ta)</button>
+    <button class="bsec rd" id="btnWH" onclick="startWrong()" style="display:none">&#x274C; Xatolar</button>
+    <button class="bsec pu" id="btnAdm" onclick="openAdmin()" style="display:none">&#x2699; Admin</button>
+    <button class="bsec tg" onclick="openTg()">&#x1F4AC; Telegram</button>
+    <button class="bsec" onclick="logout()">&#x21A9; Chiqish</button>
+  </div>
+</div>
+
+<!-- TEST -->
+<div id="pTest" class="pg">
+  <div class="thdr">
+    <button class="bbk" onclick="exitTest()">&#x2190; Chiqish</button>
+    <div class="thi"><div class="tht" id="thtit">Bo&#x2bc;lim 1</div><div class="ths" id="thsub">...</div></div>
+    <div class="tmr"><div class="tv" id="tvl">60:00</div><div class="tl2">vaqt</div></div>
+  </div>
+  <div class="prow"><div class="pbar"><div class="pbf" id="pbf" style="width:0%"></div></div><div class="ptx" id="ptx">0 / 0</div></div>
+  <div class="qnav" id="qnav"></div>
+  <div class="qa" id="qa"></div>
+  <div class="tfoot">
+    <button class="fnv" id="bPrev" onclick="prevQ()">&#x2190; Oldingi</button>
+    <div class="fctr" id="fctr">1 / 50</div>
+    <button class="fnv pr" id="bNext" onclick="nextQ()">Keyingi &#x2192;</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="pRes" class="pg"><div class="rbody" id="rbody"></div></div>
+
+<!-- ADMIN -->
+<div id="pAdm" class="pg">
+  <div class="ahdr"><div class="ahdr-t">&#x2699; Admin Panel</div><button class="bbk" onclick="goHome()">&#x2190; Orqaga</button></div>
+  <div class="abody" id="abody"></div>
+</div>
+
+<!-- Tooltip -->
+<div class="ttpop" id="ttpop">
+  <div class="ttp-t" id="tpt"></div>
+  <div class="ttp-b" id="tpb"></div>
+  <div class="ttp-s" id="tps"></div>
+</div>
+
+<script>
+/* ── OVG mini-crypto: SHA-256 + secp256r1 (P-256) ECDSA ── */
+var OVGC=(function(){
+'use strict';
+/* ---------- base64url ---------- */
+function b64uEnc(bytes){var s='';for(var i=0;i<bytes.length;i++)s+=String.fromCharCode(bytes[i]);
+  return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function b64uDec(str){var s=String(str).replace(/-/g,'+').replace(/_/g,'/');
+  while(s.length%4)s+='=';var bin=atob(s);var b=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);return b;}
+function utf8Enc(str){var out=[],i,c;for(i=0;i<str.length;i++){c=str.charCodeAt(i);
+  if(c<0x80)out.push(c);
+  else if(c<0x800){out.push(0xc0|(c>>6),0x80|(c&63));}
+  else if(c>=0xd800&&c<0xdc00){var c2=str.charCodeAt(++i);var cp=0x10000+((c-0xd800)<<10)+(c2-0xdc00);
+    out.push(0xf0|(cp>>18),0x80|((cp>>12)&63),0x80|((cp>>6)&63),0x80|(cp&63));}
+  else{out.push(0xe0|(c>>12),0x80|((c>>6)&63),0x80|(c&63));}}
+  return new Uint8Array(out);}
+function utf8Dec(bytes){var s='',i=0,c;while(i<bytes.length){c=bytes[i++];
+  if(c<0x80)s+=String.fromCharCode(c);
+  else if(c<0xe0)s+=String.fromCharCode(((c&31)<<6)|(bytes[i++]&63));
+  else if(c<0xf0)s+=String.fromCharCode(((c&15)<<12)|((bytes[i++]&63)<<6)|(bytes[i++]&63));
+  else{var cp=((c&7)<<18)|((bytes[i++]&63)<<12)|((bytes[i++]&63)<<6)|(bytes[i++]&63);cp-=0x10000;
+    s+=String.fromCharCode(0xd800+(cp>>10),0xdc00+(cp&1023));}}
+  return s;}
+
+/* ---------- SHA-256 ---------- */
+var K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+function sha256(msg){
+  var H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  var l=msg.length,bl=l*8;
+  var withPad=new Uint8Array((((l+9)>>6)+1)<<6);
+  withPad.set(msg);withPad[l]=0x80;
+  var hi=Math.floor(bl/4294967296),lo=bl>>>0;
+  var n=withPad.length;
+  withPad[n-8]=(hi>>>24)&255;withPad[n-7]=(hi>>>16)&255;withPad[n-6]=(hi>>>8)&255;withPad[n-5]=hi&255;
+  withPad[n-4]=(lo>>>24)&255;withPad[n-3]=(lo>>>16)&255;withPad[n-2]=(lo>>>8)&255;withPad[n-1]=lo&255;
+  var w=new Int32Array(64);
+  for(var off=0;off<n;off+=64){
+    for(var i=0;i<16;i++)w[i]=(withPad[off+i*4]<<24)|(withPad[off+i*4+1]<<16)|(withPad[off+i*4+2]<<8)|withPad[off+i*4+3];
+    for(i=16;i<64;i++){
+      var g0=w[i-15],g1=w[i-2];
+      var s0=((g0>>>7)|(g0<<25))^((g0>>>18)|(g0<<14))^(g0>>>3);
+      var s1=((g1>>>17)|(g1<<15))^((g1>>>19)|(g1<<13))^(g1>>>10);
+      w[i]=(w[i-16]+s0+w[i-7]+s1)|0;}
+    var a=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+    for(i=0;i<64;i++){
+      var S1=((e>>>6)|(e<<26))^((e>>>11)|(e<<21))^((e>>>25)|(e<<7));
+      var ch=(e&f)^(~e&g);
+      var t1=(h+S1+ch+K[i]+w[i])|0;
+      var S0=((a>>>2)|(a<<30))^((a>>>13)|(a<<19))^((a>>>22)|(a<<10));
+      var mj=(a&b)^(a&c)^(b&c);
+      var t2=(S0+mj)|0;
+      h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;}
+    H[0]=(H[0]+a)|0;H[1]=(H[1]+b)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;
+    H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0;}
+  var out=new Uint8Array(32);
+  for(i=0;i<8;i++){out[i*4]=(H[i]>>>24)&255;out[i*4+1]=(H[i]>>>16)&255;out[i*4+2]=(H[i]>>>8)&255;out[i*4+3]=H[i]&255;}
+  return out;}
+function sha256hex(str){var b=sha256(utf8Enc(str)),s='';
+  for(var i=0;i<b.length;i++)s+=('0'+b[i].toString(16)).slice(-2);return s;}
+
+/* ---------- P-256 curve ---------- */
+var P=BigInt('0xffffffff00000001000000000000000000000000ffffffffffffffffffffffff');
+var A=BigInt('0xffffffff00000001000000000000000000000000fffffffffffffffffffffffc');
+var B=BigInt('0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b');
+var N=BigInt('0xffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551');
+var GX=BigInt('0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296');
+var GY=BigInt('0x4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5');
+var ZERO=BigInt(0),ONE=BigInt(1),TWO=BigInt(2),THREE=BigInt(3);
+function mod(a,m){var r=a%m;return r<ZERO?r+m:r;}
+function inv(a,m){/* extended euclid */
+  var lm=ONE,hm=ZERO,low=mod(a,m),high=m;
+  while(low>ONE){var r=high/low;var nm=hm-lm*r,nw=high-low*r;hm=lm;high=low;lm=nm;low=nw;}
+  return mod(lm,m);}
+/* Jacobian point ops */
+function jDouble(p){
+  var X=p[0],Y=p[1],Z=p[2];
+  if(Y===ZERO)return [ZERO,ZERO,ZERO];
+  var YY=mod(Y*Y,P);
+  var S=mod(BigInt(4)*X*YY,P);
+  var ZZ=mod(Z*Z,P);
+  var M=mod(THREE*X*X+A*ZZ*ZZ,P);
+  var nx=mod(M*M-TWO*S,P);
+  var ny=mod(M*(S-nx)-BigInt(8)*YY*YY,P);
+  var nz=mod(TWO*Y*Z,P);
+  return [nx,ny,nz];}
+function jAdd(p,q){
+  if(p[2]===ZERO)return q;
+  if(q[2]===ZERO)return p;
+  var Z1Z1=mod(p[2]*p[2],P),Z2Z2=mod(q[2]*q[2],P);
+  var U1=mod(p[0]*Z2Z2,P),U2=mod(q[0]*Z1Z1,P);
+  var S1=mod(p[1]*q[2]*Z2Z2,P),S2=mod(q[1]*p[2]*Z1Z1,P);
+  if(U1===U2){ if(S1!==S2) return [ZERO,ZERO,ZERO]; return jDouble(p); }
+  var H=mod(U2-U1,P),R=mod(S2-S1,P);
+  var HH=mod(H*H,P),HHH=mod(H*HH,P);
+  var V=mod(U1*HH,P);
+  var nx=mod(R*R-HHH-TWO*V,P);
+  var ny=mod(R*(V-nx)-S1*HHH,P);
+  var nz=mod(H*p[2]*q[2],P);
+  return [nx,ny,nz];}
+function jMul(k,p){
+  var r=[ZERO,ZERO,ZERO],acc=p;
+  while(k>ZERO){ if(k&ONE)r=jAdd(r,acc); acc=jDouble(acc); k>>=ONE; }
+  return r;}
+function jToAffine(p){
+  if(p[2]===ZERO)return null;
+  var zi=inv(p[2],P),zi2=mod(zi*zi,P);
+  return [mod(p[0]*zi2,P),mod(p[1]*zi2*zi,P)];}
+function bytesToBig(b){var h='';for(var i=0;i<b.length;i++)h+=('0'+b[i].toString(16)).slice(-2);
+  return h?BigInt('0x'+h):ZERO;}
+function bigToBytes(n,len){var h=n.toString(16);while(h.length<len*2)h='0'+h;
+  var b=new Uint8Array(len);for(var i=0;i<len;i++)b[i]=parseInt(h.substr(i*2,2),16);return b;}
+
+/* ---------- ECDSA ---------- */
+function verify(pubJwk,msgBytes,sigBytes){
+  try{
+    if(sigBytes.length!==64)return false;
+    var r=bytesToBig(sigBytes.slice(0,32)),s=bytesToBig(sigBytes.slice(32,64));
+    if(r<=ZERO||r>=N||s<=ZERO||s>=N)return false;
+    var qx=bytesToBig(b64uDec(pubJwk.x)),qy=bytesToBig(b64uDec(pubJwk.y));
+    /* point on curve? */
+    if(mod(qy*qy-(qx*qx*qx+A*qx+B),P)!==ZERO)return false;
+    var e=bytesToBig(sha256(msgBytes));
+    var w=inv(s,N);
+    var u1=mod(e*w,N),u2=mod(r*w,N);
+    var pt=jAdd(jMul(u1,[GX,GY,ONE]),jMul(u2,[qx,qy,ONE]));
+    var aff=jToAffine(pt);
+    if(!aff)return false;
+    return mod(aff[0],N)===mod(r,N);
+  }catch(err){return false;}}
+function sign(privJwk,msgBytes){
+  var d=bytesToBig(b64uDec(privJwk.d));
+  var e=bytesToBig(sha256(msgBytes));
+  for(var tries=0;tries<64;tries++){
+    var kb=new Uint8Array(32);
+    (window.crypto||window.msCrypto).getRandomValues(kb);
+    var k=mod(bytesToBig(kb),N);
+    if(k===ZERO)continue;
+    var aff=jToAffine(jMul(k,[GX,GY,ONE]));
+    if(!aff)continue;
+    var r=mod(aff[0],N);
+    if(r===ZERO)continue;
+    var s=mod(inv(k,N)*(e+d*r),N);
+    if(s===ZERO)continue;
+    var out=new Uint8Array(64);
+    out.set(bigToBytes(r,32),0);out.set(bigToBytes(s,32),32);
+    return out;}
+  throw new Error('sign failed');}
+function makeKeypair(){
+  var kb=new Uint8Array(32);
+  (window.crypto||window.msCrypto).getRandomValues(kb);
+  var d=mod(bytesToBig(kb),N);
+  if(d===ZERO)d=ONE;
+  var aff=jToAffine(jMul(d,[GX,GY,ONE]));
+  var pub={kty:'EC',crv:'P-256',x:b64uEnc(bigToBytes(aff[0],32)),y:b64uEnc(bigToBytes(aff[1],32))};
+  var prv={kty:'EC',crv:'P-256',x:pub.x,y:pub.y,d:b64uEnc(bigToBytes(d,32))};
+  return {pub:pub,prv:prv};}
+
+return {b64uEnc:b64uEnc,b64uDec:b64uDec,utf8Enc:utf8Enc,utf8Dec:utf8Dec,
+        sha256:sha256,sha256hex:sha256hex,verify:verify,sign:sign,makeKeypair:makeKeypair};
+})();
+
+</script>
+<script>
+var GLOSSARY={"бозор қиймати":{"def":"Erkin bozorda xabardor xaridor va sotuvchi o'rtasida majburlashsiz amalga oshiriladigan bitimda baholash ob'ekti uchun to'lanadigan eng ehtimoliy narx.","src":"O'zR 'Baholash faoliyati to'g'risida'gi Qonun, 4-modda; YAMBS 1-son, 3-bob"},"баҳолаш":{"def":"Baholash ob'ektining bozor yoki boshqa qiymatini aniqlashga qaratilgan professional faoliyat.","src":"O'zR 'Baholash faoliyati to'g'risida'gi Qonun, 3-modda"},"амортизация":{"def":"Asosiy vositalar qiymatining foydali xizmat muddati davomida mahsulot (ish, xizmat) tannarxiga bosqichma-bosqich o'tkazilishi.","src":"O'zR Soliq kodeksi, 306-modda"},"дисконтлаш":{"def":"Kelajakdagi pul oqimlarini joriy (hozirgi) qiymatga keltirish jarayoni. PV = FV / (1+r)^n formulasi orqali hisoblanadi.","src":"YAMBS 9-son (Daromad yondashuvi), 4-bob"},"капиталлаш":{"def":"Daromadni qiymatga aylantirishning matematik usuli: V = I / R, bu yerda I - daromad, R - kapitallashtirish koeffitsienti.","src":"YAMBS 9-son, 5-bob; YAMBS 3-son"},"ипотека":{"def":"Ko'chmas mulk garovi bilan ta'minlangan uzoq muddatli kredit. Garovga qo'yilgan mulk kreditor foydasiga yuklanadi.","src":"O'zR 'Ipoteka to'g'risida'gi Qonun, 2-modda"},"эскириш":{"def":"Baholash ob'ekti qiymatining turli sabablar tufayli pasayishi. Jismoniy, funksional va tashqi (iqtisodiy) turlarga bo'linadi.","src":"YAMBS 8-son (Xarajat yondashuvi), 4-bob"},"ликвидлилик":{"def":"Aktivning bozor narxidan katta zarar ko'rmasdan tez sotilishi yoki pulga aylantirilishi qobiliyati.","src":"YAMBS 1-son, 3-bob"},"инвестиция":{"def":"Kelajakda foyda olish maqsadida iqtisodiy ob'ektlarga kiritiladigan uzoq muddatli mablag' qo'yilmalari.","src":"O'zR 'Investitsiya faoliyati to'g'risida'gi Qonun, 3-modda"},"дивиденд":{"def":"Aksiyador jamiyatning sof foydasi hisobidan aksiyadorlarga ulush miqdoriga qarab to'lanadigan daromad.","src":"O'zR 'Aksiyadorlik jamiyatlari to'g'risida'gi Qonun, 51-modda"},"роялти":{"def":"Intellektual mulk ob'ektidan (patent, litsenziya, tovar belgisi) foydalanish uchun egasiga to'lanadigan muntazam (odatda foiz shaklida) to'lov.","src":"YAMBS 11-son (Intellektual mulk), 4-bob"},"паушал":{"def":"Litsenziya shartnomasida ko'zda tutilgan bir martalik umumiy (bo'linmas) to'lov summasi.","src":"YAMBS 11-son (Intellektual mulk), 4-bob"},"гудвилл":{"def":"Korxonaning ijobiy reputatsiyasi, mijozlar bazasi, brendiga egalik va boshqa nomoddiy omillar natijasida hosil bo'ladigan qo'shimcha qiymat.","src":"YAMBS 10-son (Nomoddiy aktivlar), 3-bob; BHMSlar"},"реверсия":{"def":"Daromad keltiradigan mulkni prognoz davri oxirida qayta sotishdan kutilayotgan tushum (terminal qiymat).","src":"YAMBS 9-son (Daromad yondashuvi), 6-bob"},"аннуитет":{"def":"Ma'lum muddatlar davomida teng oraliqda to'lanadigan teng miqdordagi pul to'lovlari ketma-ketligi.","src":"YAMBS 9-son, Ilova (6 funksiya jadvali)"},"WACC":{"def":"Kapitalning og'irlik berib hisoblangan o'rtacha qiymati. WACC = kd(1-t)*wd + ke*we. Diskontlash stavkasi sifatida qo'llaniladi.","src":"YAMBS 9-son (Daromad yondashuvi), 5-bob"},"NPV":{"def":"Sof joriy qiymat (Net Present Value). Investitsiya loyihasidan olinadigan diskontlangan daromadlarning investitsiya xarajatlaridan ayirmasi.","src":"YAMBS 9-son, 7-bob"},"IRR":{"def":"Ichki daromadlilik me'yori (Internal Rate of Return). NPV = 0 bo'lgandagi diskontlash stavkasi.","src":"YAMBS 9-son, 7-bob"},"сервитут":{"def":"Bir yer uchastkasi egasining qo'shni yer uchastkasidan cheklangan tartibda foydalanish huquqi (o'tish, quvur tortish va hokazo).","src":"O'zR Fuqarolik kodeksi, 178-modda; Yer kodeksi, 32-modda"},"лизинг":{"def":"Mol-mulkni egasi (lizingdovchi) tomonidan foydalanuvchiga (lizingoluvchi) ma'lum muddatga va to'lov asosida ijaraga berish shartnomasi.","src":"O'zR 'Lizing to'g'risida'gi Qonun, 4-modda"},"тиклаш қиймати":{"def":"Baholash sanasida huddi shunday ob'ektni bir xil materiallar va texnologiyalar yordamida qayta barpo etish xarajatlarining umumiy summasi.","src":"YAMBS 8-son (Xarajat yondashuvi), 3-bob"},"алмаштириш қиймати":{"def":"Baholash sanasida o'xshash (ekvivalent) foydaliligi bo'lgan ob'ektni zamonaviy materiallar va texnologiyalar bilan barpo etish xarajatlari.","src":"YAMBS 8-son (Xarajat yondashuvi), 3-bob"},"жамланган эскириш":{"def":"Jismoniy eskirish, funksional eskirish va tashqi (iqtisodiy) eskirishning umumiy yig'indisi sifatida ifodalanuvchi qiymat yo'qotishi.","src":"YAMBS 8-son, 4-bob"},"МБС":{"def":"Milliy Baholash Standarti. O'zbekiston Respublikasida baholash faoliyatini tartibga soluvchi normativ hujjat.","src":"O'zR 'Baholash faoliyati to'g'risida'gi Qonun, 16-modda"},"ЯМБС":{"def":"Yagona Milliy Baholash Standarti. O'zbekistonda barcha baholovchilar uchun majburiy bo'lgan asosiy uslubiy hujjat.","src":"O'zR 'Baholash faoliyati to'g'risida'gi Qonun, 16-modda"},"бета коэффициенти":{"def":"CAPM modelida qo'llaniladigan, muayyan aksiyaning bozor indeksiga nisbatan narx o'zgarishi sezgirligini o'lchovchi koeffitsiyent.","src":"YAMBS 9-son, 5-bob (CAPM modeli)"},"CAPM":{"def":"Capital Asset Pricing Model - kapital aktivlarini baholash modeli. r = Rf + beta*(Rm-Rf). Xususiy kapital daromadliligini hisoblashda qo'llaniladi.","src":"YAMBS 9-son, 5-bob"},"медиана":{"def":"Statistik qatorni ikki teng qismga ajratuvchi o'rta qiymat. Qator tartibga solinganida o'rtadagi element.","src":"Statistika nazariyasi"},"леверидж":{"def":"Qarz va o'zlik kapitalining nisbatini aks ettiruvchi moliyaviy ko'rsatkich. Moliyaviy leverage korxona rentabelligiga ta'sir qiladi.","src":"YAMBS 9-son, 5-bob"},"мультипликатор":{"def":"Kompaniyaning bozor narxini u bilan bog'liq moliyaviy ko'rsatkichga (EBITDA, foyda, daromad) nisbatini aks ettiruvchi koeffitsiyent.","src":"YAMBS 7-son (Qiyosiy yondashuv), 4-bob"},"проба":{"def":"Qimmatbaho metallar qorishmasidagi sof metalning foizli ulushini ifodalovchi son (1000 dan). Misol: 585 proba = 58.5% sof oltin.","src":"YAMBS 5-son (Qimmatbaho metallar), 3-bob"},"карат":{"def":"Qimmatbaho toshlar og'irligini o'lchash birligi. 1 karat = 0.2 gramm = 200 milligramm.","src":"YAMBS 5-son (Qimmatbaho toshlar), 3-bob"},"VIN":{"def":"Vehicle Identification Number - transport vositasining zavod tomonidan beriladigan 17 belgidan iborat takrorlanmaydigan identifikatsion raqami.","src":"YAMBS 6-son (Transport vositalari), 3-bob"},"EBITDA":{"def":"Foizlar, soliqlar, amortizatsiya va depreciation to'lanmasidan oldingi daromad. Korxona operatsion samaradorligini o'lchovchi asosiy ko'rsatkich.","src":"Xalqaro moliyaviy hisobot standartlari (XMHS)"},"дебиторлик":{"def":"Xaridor, buyurtmachi yoki boshqa tomonlarning korxonaga ko'rsatilgan tovar/xizmat uchun to'lashi lozim bo'lgan qarz summasi.","src":"BHMSlar, 21-sonli 'Debitorlik qarzlari' standarti"},"кредиторлик":{"def":"Korxonaning yetkazib beruvchilar, pudratchilar va boshqa tomonlar oldidagi qarz majburiyatlari.","src":"BHMSlar"},"устав капитали":{"def":"Korxona ta'sis hujjatlarida belgilangan va ta'sischilar tomonidan kiritilgan boshlang'ich kapital miqdori.","src":"O'zR 'Mas'uliyati cheklangan jamiyatlar to'g'risida'gi Qonun, 14-modda"},"захира капитали":{"def":"Korxona foydasidan majburiy ravishda tashkil etiladigan va kutilmagan zararlarni qoplashga mo'ljallangan kapital.","src":"O'zR 'Aksiyadorlik jamiyatlari to'g'risida'gi Qonun, 61-modda"},"ноу-хау":{"def":"Texnik, texnologik, tijorat yoki tashkiliy xususiyatga ega bo'lgan maxfiy bilimlar, ko'nikmalar va tajriba majmuasi.","src":"O'zR Fuqarolik kodeksi, 1099-modda; YAMBS 11-son"},"патент":{"def":"Muallif yoki huquq egasiga ixtironi muayyan muddat (20 yil) davomida o'z ixtiyorida ishlatish huquqini beruvchi davlat hujjati.","src":"O'zR 'Ixtirolar to'g'risida'gi Qonun, 5-modda"},"лицензия":{"def":"Patent egasi (litsenziar) tomonidan boshqa shaxsga (litsenziat) intellektual mulk ob'ektidan foydalanish huquqini beruvchi shartnoma.","src":"O'zR Fuqarolik kodeksi, 1104-modda; YAMBS 11-son"},"товар белгиси":{"def":"Bir ishlab chiqaruvchi tovar yoki xizmatlarini boshqalarnikidan ajratib turuvchi grafik, verbal yoki kombinatsiyalashgan belgi.","src":"O'zR 'Tovar belgilari to'g'risida'gi Qonun, 2-modda"},"базавий ҳисоблаш миқдори":{"def":"O'zbekistonda jarimalar, to'lovlar va boshqa summalarni hisoblashda ishlatiladigan shartli birlik. 2024 yilda = 340,000 so'm.","src":"O'zR Prezidenti Farmoni"},"сof активлар":{"def":"Korxona aktivlarining umumiy qiymati va barcha majburiyatlar o'rtasidagi farq. Xarajat yondashuvida asosiy ko'rsatkich.","src":"YAMBS 4-son (Korxona qiymati), 4-bob"},"капиталлаштириш коэффициенти":{"def":"Yillik sof operatsion daromadni ob'ekt qiymatiga aylantiradigan koeffitsiyent. R = Ron + Rof (daromadlilik + qaytish normasidan iborat).","src":"YAMBS 9-son, 5-bob"},"ер рентаси":{"def":"Yer uchastkasidan foydalanish natijasida olinadigan va yerning tabiatiy unumdorligiga bog'liq bo'lgan daromad.","src":"YAMBS 2-son (Ko'chmas mulk), 6-bob"},"энг яхши фойдаланиш":{"def":"Yuridik jihatdan mumkin bo'lgan, jismoniy amalga oshirib bo'ladigan, moliyaviy asoslangan va ob'ektga maksimal qiymat beradigan foydalanish varianti.","src":"YAMBS 2-son (Ko'chmas mulk), 3-bob; YAMBS 1-son"},"кўчмас мулк":{"def":"Yer uchastkasi va u bilan mustahkam bog'liq binolar, inshootlar hamda tuproqdan ajratish qiyinlashtiradigan boshqa ob'ektlar.","src":"O'zR Fuqarolik kodeksi, 83-modda"},"сугурта қиймати":{"def":"Sug'urtaviy hodisa yuz berganda sug'urtachiга ko'rilgan zararni qoplash uchun asos bo'lib xizmat qiladigan mol-mulk qiymati.","src":"YAMBS 1-son, 4-bob; O'zR 'Sug'urta to'g'risida'gi Qonun"},"гаров қиймати":{"def":"Kredit berishda garov sifatida qabul qilinadigan mol-mulkning baholovchi tomonidan aniqlangan qiymati.","src":"YAMBS 1-son, 4-bob; O'zR 'Ipoteka to'g'risida'gi Qonun"},"тугатиш қиймати":{"def":"Ob'ektni qisqa muddat ichida (bozor muddatidan qisqa) majburiy tarzda sotishda erishilishi mumkin bo'lgan eng ehtimoliy narx.","src":"YAMBS 1-son, 4-bob"},"инвестиция қиймати":{"def":"Muayyan investor uchun uning individual investitsiya talablari va maqsadlari asosida aniqlanadigan ob'ekt qiymati.","src":"YAMBS 1-son, 4-bob"},"фойдалилик тамойили":{"def":"Mol-mulk qiymati faqat uning foyda keltirish qobiliyatiga ega bo'lganida vujudga keladi degan baholash printsipi.","src":"YAMBS 1-son, 2-bob"},"ўрнига белгилаш тамойили":{"def":"Xaridor o'xshash foydaliligi bo'lgan boshqa ob'ekt uchun ko'proq to'lamaydi degan baholash printsipi.","src":"YAMBS 1-son, 2-bob"},"кутиш тамойили":{"def":"Mol-mulk qiymati undan kelajakda olinadigan daromadlar yoki boshqa foydalar joriy qiymati bilan belgilanadi degan princip.","src":"YAMBS 1-son, 2-bob"},"таклиф ва талаб тамойили":{"def":"Mol-mulk qiymati bozordagi talab va taklif nisbatiga bog'liq ravishda shakllanadi degan baholash printsipi.","src":"YAMBS 1-son, 2-bob"},"харажат ёндашуви":{"def":"Baholash ob'ekti qiymatini unga o'xshash ob'ektni qayta yaratish yoki almashtirish xarajatlaridan kelib chiqib aniqlash usuli.","src":"YAMBS 8-son (Xarajat yondashuvi)"},"даромад ёндашуви":{"def":"Baholash ob'ekti qiymatini undan kelajakda olinadigan daromadlarni diskontlash yoki kapitallashtirish orqali aniqlash usuli.","src":"YAMBS 9-son (Daromad yondashuvi)"},"қиёсий ёндашув":{"def":"Baholash ob'ekti qiymatini o'xshash ob'ektlar bilan haqiqiy bitimlar narxlarini solishtirish orqali aniqlash usuli.","src":"YAMBS 7-son (Qiyosiy yondashuv)"},"жисмоний эскириш":{"def":"Foydalanish, eskirish va tashqi ta'sirlar natijasida ob'ektning texnik holati va sifat ko'rsatkichlarining yomonlashuvi.","src":"YAMBS 8-son, 4-bob"},"функционал эскириш":{"def":"Baholash ob'ektining zamonaviy talablar, texnologiyalar va me'yorlarga nisbatan eskiishi natijasida qiymatining pasayishi.","src":"YAMBS 8-son, 4-bob"},"ташқи эскириш":{"def":"Ob'ektning o'ziga bog'liq bo'lmagan tashqi omillar (ekologiya, infratuzilma, bozor holati) ta'sirida qiymatining pasayishi.","src":"YAMBS 8-son, 4-bob"},"потенциал ялпи даромад":{"def":"Ko'chmas mulk ob'ektidan 100% to'ldirilgan va yetarli ijara stavkasida foydalanilganda olinadigan maksimal daromad.","src":"YAMBS 9-son, 4-bob"},"ҳақиқий ялпи даромад":{"def":"Potensial yalpi daromaddan bo'sh turish va to'lovlarni yig'ishmaslик yo'qotishlarini ayirgan holda aniqlanadigan daromad.","src":"YAMBS 9-son, 4-bob"},"соф операцион даромад":{"def":"Haqiqiy yalpi daromaddan barcha operatsion xarajatlar (ta'mir, boshqaruv, sug'urta, soliqlar) ayirilgandan keyin qoladigan daromad.","src":"YAMBS 9-son, 4-bob"}};
+</script>
+<script>
+/* ═══════════════ OVG BAHOLOVCHI TEST v5 (login/parol) ═══════════════ */
+(function(){
+'use strict';
+
+var QPS=50;          /* savollar / bo'lim */
+var SPQ=72;          /* sekund / savol  -> 50*72 = 3600 = 60 daqiqa */
+var TG_LINK='https://t.me/Orientconsulting';
+var K_SESS='ovg5_sess',K_BANK='ovg5_bank',K_INST='ovg4_inst',K_TYPE='ovg4_type',K_CLK='ovg4_clk';
+/* natijalar har bir login uchun alohida saqlanadi (setUser ichida o'rnatiladi) */
+var K_PROG='ovg5_prog',K_WRNG='ovg5_wrng',K_STAT='ovg5_stat';
+var CHECK_MS=15*60000;  /* login holatini serverda qayta tekshirish oralig'i */
+
+var OL=['а','б','в','г','д'];
+var OLB={'а':'A','б':'B','в':'V','г':'G','д':'D'};
+
+var BANK=[],BYID={},SECS=[],DEMO_Q=[];
+function setBank(b){
+  BANK=Array.isArray(b)?b:[];BYID={};SECS=[];
+  for(var i=0;i<BANK.length;i++)BYID[BANK[i][0]]=BANK[i];
+  for(var s=0;s<BANK.length;s+=QPS)SECS.push(BANK.slice(s,s+QPS));
+}
+
+/* ══════════ STORAGE ══════════ */
+/* localStorage mavjud bo'lmasa (ba'zi brauzerlarda file:// yoki maxfiy rejim) —
+   sessiya davomida ishlaydigan xotira zaxirasiga o'tamiz. */
+var STORE_OK=true,MEM={};
+try{localStorage.setItem('__t','1');localStorage.removeItem('__t');}catch(e){STORE_OK=false;}
+function gs(k){
+  if(!STORE_OK)return (k in MEM)?MEM[k]:null;
+  try{return localStorage.getItem(k);}catch(e){return null;}}
+function ss(k,v){
+  if(!STORE_OK){MEM[k]=String(v);return;}
+  try{localStorage.setItem(k,String(v));}catch(e){}}
+function rm(k){
+  if(!STORE_OK){delete MEM[k];return;}
+  try{localStorage.removeItem(k);}catch(e){}}
+function gl(k){try{return JSON.parse(gs(k));}catch(e){return null;}}
+function sl(k,v){ss(k,JSON.stringify(v));}
+
+/* ══════════ SOAT (orqaga surishdan himoya) ══════════ */
+function nowSafe(){
+  var n=Date.now(),last=parseInt(gs(K_CLK)||'0',10)||0;
+  if(n>=last){ss(K_CLK,String(n));return n;}
+  if(last-n>172800000)return last;   /* 2 kundan ko'p orqaga surilgan */
+  return n;
+}
+function fmtD(ms){var d=new Date(ms);
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+
+/* ══════════ QURILMA ══════════ */
+var STANDALONE=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+function detectType(){
+  var ua=navigator.userAgent||'';
+  if(/iPad|Tablet|PlayBook|Silk/i.test(ua)||(/Android/i.test(ua)&&!/Mobile/i.test(ua)))return 'T';
+  if(/Mobi|Android|iPhone|iPod|IEMobile|Windows Phone/i.test(ua))return 'M';
+  return 'D';
+}
+function devType(){
+  var t=gs(K_TYPE);
+  if(t==='M'||t==='D'||t==='T')return t;
+  t=detectType();ss(K_TYPE,t);return t;
+}
+var _DID=null;
+function getDeviceId(){
+  if(_DID)return _DID;
+  var inst=gs(K_INST);
+  if(!inst){
+    var r=new Uint8Array(16);
+    if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(r);
+    else for(var i=0;i<16;i++)r[i]=Math.floor(Math.random()*256);
+    inst=OVGC.b64uEnc(r);ss(K_INST,inst);
+  }
+  _DID=devType()+'-'+OVGC.sha256hex('OVG5|'+inst).toUpperCase().substring(0,20).replace(/(.{4})(?=.)/g,'$1-');
+  return _DID;
+}
+function devLabel(){
+  var ua=navigator.userAgent||'';
+  var os=/iPhone/.test(ua)?'iPhone':/iPad/.test(ua)?'iPad':/Android/.test(ua)?'Android':/Windows/.test(ua)?'Windows':
+         /Macintosh|Mac OS X/.test(ua)?((navigator.maxTouchPoints||0)>1?'iPad':'Mac'):/Linux|X11/.test(ua)?'Linux':'Qurilma';
+  var br=/Edg\//.test(ua)?'Edge':/OPR\/|Opera/.test(ua)?'Opera':/YaBrowser/.test(ua)?'Yandex':/Firefox\/|FxiOS/.test(ua)?'Firefox':
+         /CriOS|Chrome\//.test(ua)?'Chrome':/Safari\//.test(ua)?'Safari':'Brauzer';
+  return os+' · '+br+(STANDALONE?' (ilova)':'');
+}
+
+/* ══════════ SERVER ══════════ */
+var SESS=null;   /* {token:'login:xxx', user:{login,name,role,exp}} */
+function api(method,path,body,ms){
+  var ctrl=window.AbortController?new AbortController():null;
+  var tm=ctrl?setTimeout(function(){ctrl.abort();},ms||15000):null;
+  var h={};
+  if(body)h['Content-Type']='application/json';
+  if(SESS&&SESS.token)h['Authorization']='Bearer '+SESS.token;
+  return fetch('/api'+path,{method:method,headers:h,body:body?JSON.stringify(body):undefined,
+                            cache:'no-store',signal:ctrl?ctrl.signal:undefined})
+    .then(function(r){
+      return r.json().catch(function(){return {};}).then(function(d){
+        if(tm)clearTimeout(tm);d=d||{};d._s=r.status;return d;});
+    },function(){if(tm)clearTimeout(tm);return {_s:0,error:'Internet aloqasi yoʼq. Tekshirib, qayta urining.'};});
+}
+
+/* ══════════ LOGIN ══════════ */
+var LIC=null,IA=false,IS_DEMO=false;
+
+function setUser(s){
+  SESS=s;
+  var u=s.user;
+  LIC={n:u.name||u.login,i:u.login,r:u.role,e:u.exp||0};
+  IA=(u.role==='admin');IS_DEMO=false;
+  var p='ovg5_'+u.login+'_';
+  K_PROG=p+'prog';K_WRNG=p+'wrng';K_STAT=p+'stat';
+}
+function clearSession(){
+  SESS=null;LIC=null;IA=false;IS_DEMO=false;
+  rm(K_SESS);rm(K_BANK);setBank([]);
+  clearInterval(T.tmr);
+}
+function showMsg(id,txt){var el=document.getElementById(id);if(el)el.textContent=txt||'';}
+function authFail(d){
+  clearSession();
+  showMsg('lgErr',d&&d.error?d.error:'Qaytadan kiring.');
+  pg('pLogin');
+}
+function loadMsg(t){var el=document.getElementById('loadMsg');if(el)el.textContent=t||'Yuklanmoqda...';}
+
+function cachedBank(){
+  var c=gl(K_BANK);
+  return (c&&c.version&&Array.isArray(c.bank)&&c.bank.length)?c:null;
+}
+/* natija: true — savollar tayyor, false — serverda baza yo'q, null — login bekor bo'ldi */
+function ensureBank(meta){
+  var c=cachedBank();
+  if(c&&(!meta||c.version===meta.version)){setBank(c.bank);return Promise.resolve(true);}
+  if(meta&&!meta.version){setBank([]);return Promise.resolve(false);}
+  loadMsg('Savollar yuklanmoqda…');pg('pLoad');
+  return api('GET','/questions',null,90000).then(function(d){
+    if(d._s===200&&Array.isArray(d.bank)){
+      setBank(d.bank);
+      ss(K_BANK,JSON.stringify({version:d.version,bank:d.bank}));
+      return true;
+    }
+    if(d._s===401||d._s===403){authFail(d);return null;}
+    if(c){setBank(c.bank);return true;}
+    setBank([]);return false;
+  });
+}
+function enterHome(){renderHome();pg('pHome');}
+
+function doLogin(){
+  var lg=(document.getElementById('lgLogin').value||'').trim().toLowerCase();
+  var pw=document.getElementById('lgPass').value||'';
+  var btn=document.getElementById('lgBtn');
+  showMsg('lgErr','');
+  if(!lg||!pw){showMsg('lgErr','Login va parolni kiriting.');return;}
+  btn.disabled=true;btn.textContent='Tekshirilmoqda…';
+  api('POST','/login',{login:lg,password:pw,device:getDeviceId(),label:devLabel()},25000).then(function(d){
+    btn.disabled=false;btn.textContent='Kirish';
+    if(d._s!==200||!d.token){showMsg('lgErr',d.error||'Xatolik yuz berdi. Qayta urining.');return;}
+    var s={token:d.token,user:d.user};
+    ss(K_SESS,JSON.stringify(s));setUser(s);
+    document.getElementById('lgPass').value='';
+    ensureBank(d.bank).then(function(ok){if(ok!==null)enterHome();});
+  });
+}
+function togglePw(){
+  var el=document.getElementById('lgPass');
+  el.type=el.type==='password'?'text':'password';
+}
+
+function logout(){
+  if(IS_DEMO){IS_DEMO=false;LIC=null;pg('pWelcome');return;}
+  if(!confirm('Tizimdan chiqasizmi?\nQayta kirish uchun login va parol kerak boʼladi.'))return;
+  if(SESS)api('POST','/logout',null,5000);
+  clearSession();
+  pg('pWelcome');
+}
+
+/* login holatini vaqti-vaqti bilan tekshirish (bloklash, muddat, savollar yangilanishi) */
+setInterval(function(){
+  if(IS_DEMO||!SESS||navigator.onLine===false)return;
+  api('GET','/me',null,10000).then(function(d){
+    if(!SESS)return;
+    if(d._s===401||d._s===403){
+      alert('Kirish bekor qilindi:\n'+(d.error||''));
+      authFail(d);return;
+    }
+    if(d._s!==200)return;
+    SESS.user=d.user;ss(K_SESS,JSON.stringify(SESS));setUser(SESS);
+    var c=cachedBank();
+    if(d.bank&&d.bank.version&&(!c||c.version!==d.bank.version)&&!document.getElementById('pTest').classList.contains('on'))
+      ensureBank(d.bank).then(function(ok){if(ok!==null)enterHome();});
+  });
+},CHECK_MS);
+
+function syncProgress(sec,score,total,tu){
+  if(IS_DEMO||!SESS||sec===-2)return;
+  api('POST','/progress',{sec:sec,score:score,total:total,tu:tu},10000);
+}
+
+/* ══════════ DEMO ══════════ */
+function startDemo(){
+  showMsg('wMsg','');
+  if(DEMO_Q.length){LIC={n:'Demo foydalanuvchi',i:'DEMO',r:'demo'};IA=false;IS_DEMO=true;renderHome();pg('pHome');return;}
+  loadMsg('Demo savollar yuklanmoqda…');pg('pLoad');
+  api('GET','/demo',null,20000).then(function(d){
+    if(d._s===200&&Array.isArray(d.demo)&&d.demo.length){
+      DEMO_Q=d.demo.filter(Boolean);
+      LIC={n:'Demo foydalanuvchi',i:'DEMO',r:'demo'};IA=false;IS_DEMO=true;
+      renderHome();pg('pHome');
+    }else{
+      pg('pWelcome');showMsg('wMsg',d.error||'Demo hozircha mavjud emas.');
+    }
+  });
+}
+function startDemoTest(){
+  beginTest(DEMO_Q,-2,'Demo test',DEMO_Q.length+' ta namuna savol',DEMO_Q.length*SPQ,false);
+}
+
+/* ══════════ HOME ══════════ */
+function renderHome(){
+  document.getElementById('ubadge').textContent=
+    (LIC?LIC.n:'?')+(IA?' 👑':'')+(IS_DEMO?' [DEMO]':'');
+  document.getElementById('btnAdm').style.display=IA?'block':'none';
+  document.getElementById('demoBanner').style.display=IS_DEMO?'block':'none';
+  document.getElementById('btnExam').style.display=(IS_DEMO||!BANK.length)?'none':'block';
+
+  var expEl=document.getElementById('licExp');
+  if(!IS_DEMO&&LIC){
+    expEl.style.display='block';
+    if(LIC.e){
+      var left=Math.ceil((LIC.e-nowSafe())/86400000);
+      expEl.textContent='🔑 '+LIC.i+' · '+fmtD(LIC.e)+' gacha ('+left+' kun)';
+    }else expEl.textContent='🔑 '+LIC.i+' · muddatsiz';
+  }else expEl.style.display='none';
+
+  var prog=gl(K_PROG)||{},wrong=gl(K_WRNG)||[];
+  var passed=0,tot=0,n=0;
+  SECS.forEach(function(_,i){var p=prog[i];if(p&&p.done){passed++;tot+=p.pct;n++;}});
+  document.getElementById('hsTot').textContent=IS_DEMO?DEMO_Q.length:BANK.length;
+  document.getElementById('hsPass').textContent=passed+'/'+SECS.length;
+  document.getElementById('hsPct').textContent=n?Math.round(tot/n)+'%':'—';
+
+  var grid=document.getElementById('sgrid');grid.innerHTML='';
+  if(IS_DEMO){
+    var d=document.createElement('div');
+    d.className='scard';d.style.gridColumn='1 / -1';
+    d.innerHTML='<div class="scn">💼</div><div class="sct">Demo test</div>'+
+      '<div class="scr2">'+DEMO_Q.length+' ta namuna savol &middot; '+Math.round(DEMO_Q.length*SPQ/60)+' daqiqa</div>'+
+      '<div class="scs p" style="margin-top:8px">Boshlash uchun bosing</div>';
+    d.onclick=startDemoTest;grid.appendChild(d);
+    var lock=document.createElement('div');
+    lock.className='lockbox';
+    lock.innerHTML='🔒 Toʼliq versiya (barcha boʼlimlar va imtihon) uchun admin bilan bogʼlaning va login oling';
+    grid.appendChild(lock);
+  }else if(!BANK.length){
+    var nb=document.createElement('div');
+    nb.className='lockbox';
+    nb.innerHTML='📚 Savollar bazasi hali yuklanmagan.<br>'+(IA?'Admin panel → «Savollar» boʼlimida bazani yuklang.':'Admin bilan bogʼlaning.');
+    grid.appendChild(nb);
+  }else{
+    SECS.forEach(function(qs,i){
+      var p=prog[i],pct=p?p.pct:0,pass=pct>=70;
+      var d=document.createElement('div');
+      d.className='scard'+(p&&p.done?' done':'');
+      d.innerHTML='<div class="scn">'+(i+1)+'</div>'+
+        '<div class="sct">Boʼlim '+(i+1)+'</div>'+
+        '<div class="scr2">S'+qs[0][0]+'–S'+qs[qs.length-1][0]+' &middot; '+qs.length+' ta</div>'+
+        (p?'<div class="scs '+(pass?'p':'f')+'">'+p.score+'/'+p.total+' ('+pct+'%)</div>'+
+            '<div class="scbar"><div class="scbf" style="width:'+pct+'%"></div></div>'
+          :'<div class="scr2" style="margin-top:6px;color:var(--mu)">Boshlanmagan</div>');
+      d.onclick=(function(idx){return function(){startSec(idx);};})(i);
+      grid.appendChild(d);
+    });
+  }
+  var wb=document.getElementById('btnWH');
+  if(!IS_DEMO&&wrong.length>0){wb.style.display='block';wb.textContent='❌ Xatolar ('+wrong.length+')';}
+  else wb.style.display='none';
+}
+
+/* ══════════ TEST ══════════ */
+var T={sec:-1,qs:[],ans:{},cur:0,tmr:null,tl:3600,tl0:3600,fin:false,rmode:false,shown:{},save:true};
+
+function beginTest(qs,sec,title,sub,seconds,save){
+  T.sec=sec;T.qs=qs;T.ans={};T.cur=0;T.tl=seconds;T.tl0=seconds;
+  T.fin=false;T.rmode=(sec===-1);T.shown={};T.save=!!save;
+  document.getElementById('thtit').textContent=title;
+  document.getElementById('thsub').textContent=sub;
+  startTimer();buildNav();renderQ();pg('pTest');
+}
+function startSec(idx){
+  if(IS_DEMO){alert('Demo rejimda faqat demo test mavjud.');return;}
+  var qs=SECS[idx];
+  beginTest(qs,idx,'Bo\u02bclim '+(idx+1),
+    'S'+qs[0][0]+'\u2013S'+qs[qs.length-1][0]+' \u00b7 '+Math.round(qs.length*SPQ/60)+' daqiqa',
+    qs.length*SPQ,true);
+}
+function startExam(){
+  if(IS_DEMO)return;
+  var pool=BANK.slice(),pick=[];
+  for(var i=0;i<QPS&&pool.length;i++)pick.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  pick.sort(function(a,b){return a[0]-b[0];});
+  beginTest(pick,-3,'\uD83C\uDF93 Imtihon rejimi',
+    QPS+' ta tasodifiy savol \u00b7 60 daqiqa',QPS*SPQ,false);
+}
+function startWrong(){
+  var wrong=gl(K_WRNG)||[];if(!wrong.length)return;
+  var qs=wrong.map(function(n){return BYID[n];}).filter(Boolean);
+  if(!qs.length)return;
+  beginTest(qs,-1,'Xatolar testi',qs.length+' ta savol',Math.max(qs.length*SPQ,600),false);
+}
+
+function startTimer(){
+  clearInterval(T.tmr);updTimer();
+  T.tmr=setInterval(function(){T.tl--;updTimer();
+    if(T.tl<=0){clearInterval(T.tmr);finish();}},1000);
+}
+function updTimer(){
+  var m=Math.floor(T.tl/60),s=T.tl%60,el=document.getElementById('tvl');
+  el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  el.className='tv'+(T.tl<300?' w':'');
+}
+
+function buildNav(){
+  var nav=document.getElementById('qnav');nav.innerHTML='';
+  T.qs.forEach(function(q,i){
+    var d=document.createElement('div');
+    d.className='qd';d.textContent=q[0];d.id='qd'+i;
+    d.onclick=(function(idx){return function(){T.cur=idx;renderQ();};})(i);
+    nav.appendChild(d);
+  });
+}
+function updDots(){
+  T.qs.forEach(function(q,i){
+    var d=document.getElementById('qd'+i);if(!d)return;
+    var sel=T.ans[i],cor=q[3],cls='qd';
+    if(T.fin&&sel!==undefined)cls+=(sel===cor?' ok':' ng');
+    else if(i===T.cur)cls+=' c'+(sel!==undefined?' a':'');
+    else if(sel!==undefined)cls+=' a';
+    d.className=cls;
+  });
+  var cd=document.getElementById('qd'+T.cur);
+  if(cd)cd.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+}
+
+/* ══════════ TOOLTIP ══════════ */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function aTT(txt){
+  if(!txt)return'';
+  var r=esc(txt);
+  var terms=Object.keys(GLOSSARY).sort(function(a,b){return b.length-a.length;});
+  var used={};
+  for(var i=0;i<terms.length;i++){
+    var t=terms[i];if(used[t])continue;
+    var lo=r.toLowerCase(),idx=lo.indexOf(t.toLowerCase());
+    if(idx===-1)continue;
+    if(r.substring(Math.max(0,idx-15),idx).indexOf('tt-ref')!==-1)continue;
+    var orig=r.substring(idx,idx+t.length),entry=GLOSSARY[t]||{};
+    var def=typeof entry==='object'?(entry.def||''):(entry||'');
+    var src=typeof entry==='object'?(entry.src||''):'';
+    var dB,sB,tB;
+    try{dB=OVGC.b64uEnc(OVGC.utf8Enc(def));sB=OVGC.b64uEnc(OVGC.utf8Enc(src));tB=OVGC.b64uEnc(OVGC.utf8Enc(t));}
+    catch(e){continue;}
+    r=r.substring(0,idx)+'<span class="tt tt-ref" data-tit="'+tB+'" data-def="'+dB+'" data-src="'+sB+'">'+
+      orig+'</span>'+r.substring(idx+t.length);
+    used[t]=1;
+  }
+  return r;
+}
+document.addEventListener('click',function(e){
+  var el=e.target;
+  while(el&&el.tagName){
+    if(el.classList&&el.classList.contains('tt-ref')){
+      e.stopPropagation();
+      var pop=document.getElementById('ttpop');
+      try{
+        document.getElementById('tpt').textContent=OVGC.utf8Dec(OVGC.b64uDec(el.getAttribute('data-tit')||''));
+        document.getElementById('tpb').textContent=OVGC.utf8Dec(OVGC.b64uDec(el.getAttribute('data-def')||''));
+        var s=OVGC.utf8Dec(OVGC.b64uDec(el.getAttribute('data-src')||''));
+        document.getElementById('tps').textContent=s?'\uD83D\uDCDA Manba: '+s:'';
+      }catch(err){
+        document.getElementById('tpt').textContent=el.textContent||'';
+        document.getElementById('tpb').textContent='';document.getElementById('tps').textContent='';
+      }
+      var r2=el.getBoundingClientRect();
+      var top=r2.bottom+8,left=Math.max(8,Math.min(r2.left,window.innerWidth-280));
+      if(top+180>window.innerHeight)top=r2.top-185;
+      pop.style.top=top+'px';pop.style.left=left+'px';
+      pop.classList.add('on');return;
+    }
+    el=el.parentElement;
+  }
+  document.getElementById('ttpop').classList.remove('on');
+});
+
+/* ══════════ SAVOL ══════════ */
+function renderQ(){
+  var q=T.qs[T.cur],total=T.qs.length,cor=q[3],sel=T.ans[T.cur];
+  var locked=(sel!==undefined)||T.fin,shown=!!T.shown[T.cur];
+  var ansCnt=Object.keys(T.ans).length;
+  document.getElementById('pbf').style.width=(ansCnt/total*100)+'%';
+  document.getElementById('ptx').textContent=ansCnt+' / '+total;
+  document.getElementById('fctr').textContent=(T.cur+1)+' / '+total;
+  document.getElementById('bPrev').disabled=(T.cur===0);
+  document.getElementById('bNext').textContent=(T.cur===total-1)?'Tugatish \u2713':'Keyingi \u2192';
+  updDots();
+  var optsH='',keys=OL.filter(function(k){return q[2][k]!==undefined;});
+  keys.forEach(function(key){
+    var val=q[2][key]||'',cls='opt',icon='';
+    if(locked||shown){
+      if(key===cor){cls+=' ok';icon='<span class="opt-i">\u2713</span>';}
+      else if(key===sel&&key!==cor){cls+=' ng';icon='<span class="opt-i">\u2717</span>';}
+    }else if(key===sel)cls+=' sel';
+    optsH+='<button class="'+cls+'" '+(locked?'disabled':'')+' onclick="pick(\''+key+'\')">'+
+      '<span class="opt-l">'+(OLB[key]||key)+'</span><span class="opt-t">'+aTT(val)+'</span>'+icon+'</button>';
+  });
+  var hintOn=(locked&&sel!==undefined&&sel!==cor)||shown;
+  var hintH='<div class="hint'+(hintOn?' on':'')+'">\u2713 <b>To\u02bcg\u02bcri javob:</b> '+
+    (OLB[cor]||cor)+' \u2014 '+esc(q[2][cor]||'')+'</div>';
+  var shwH=(!locked&&!shown)?'<button class="shwbtn" onclick="revealAns()">\uD83D\uDCA1 To\u02bcg\u02bcri javobni ko\u02bcrsatish</button>':'';
+  document.getElementById('qa').innerHTML=
+    '<div class="qcard"><div class="qno">Savol '+q[0]+'</div><div class="qtx">'+aTT(q[1])+'</div></div>'+
+    '<div class="opts">'+optsH+'</div>'+hintH+shwH;
+  document.getElementById('qa').scrollTop=0;
+}
+function pick(key){
+  if(T.ans[T.cur]!==undefined||T.fin)return;
+  T.ans[T.cur]=key;renderQ();
+  if(key===T.qs[T.cur][3]&&T.cur<T.qs.length-1)
+    (function(at){setTimeout(function(){if(T.cur===at&&!T.fin&&T.cur<T.qs.length-1){T.cur++;renderQ();}},650);})(T.cur);
+}
+function revealAns(){T.shown[T.cur]=true;renderQ();}
+function prevQ(){if(T.cur>0){T.cur--;renderQ();}}
+function nextQ(){if(T.cur<T.qs.length-1){T.cur++;renderQ();}else finish();}
+function exitTest(){
+  if(T.fin){pg('pHome');renderHome();return;}
+  if(confirm('Testni tark etmoqchimisiz? Natija saqlanmaydi.')){clearInterval(T.tmr);pg('pHome');renderHome();}
+}
+
+/* ══════════ NATIJA ══════════ */
+function finish(){
+  clearInterval(T.tmr);T.fin=true;
+  var total=T.qs.length,correct=0,wrongItems=[],wrongNums=[];
+  T.qs.forEach(function(q,i){
+    var sel=T.ans[i],cor=q[3];
+    if(sel===cor)correct++;
+    else{
+      wrongNums.push(q[0]);
+      wrongItems.push({num:q[0],txt:(q[1]||'').substring(0,55)+'...',
+        yours:sel?(OLB[sel]+'\u2013'+(q[2][sel]||'?')):'Javob yo\u02bcq',
+        corT:(OLB[cor]||cor)+'\u2013'+(q[2][cor]||'')});
+    }
+  });
+  var pct=Math.round(correct/total*100),pass=pct>=70,tu=T.tl0-T.tl;
+  if(!IS_DEMO){
+    if(T.save&&T.sec>=0){
+      var prog=gl(K_PROG)||{};
+      prog[T.sec]={score:correct,total:total,done:true,pct:pct,tu:tu,t:nowSafe()};
+      sl(K_PROG,prog);
+    }
+    var ws={};(gl(K_WRNG)||[]).forEach(function(n){ws[n]=1;});
+    wrongNums.forEach(function(n){ws[n]=1;});
+    T.qs.forEach(function(q,i){if(T.ans[i]===q[3])delete ws[q[0]];});
+    sl(K_WRNG,Object.keys(ws).map(Number));
+    var st=gl(K_STAT)||{s:[],tc:0,tq:0};
+    st.s.push({t:nowSafe(),sec:T.sec,score:correct,total:total,pct:pct,tu:tu});
+    if(st.s.length>60)st.s.splice(0,st.s.length-60);
+    st.tc+=correct;st.tq+=total;sl(K_STAT,st);
+    syncProgress(T.sec,correct,total,tu);
+  }
+  var msgs=['\uD83C\uDFC6 Ajoyib! Sertifikat imtihoniga to\u02bcliq tayyorsiz!',
+    '\u2705 Yaxshi! O\u02bctdingiz. Xatolarni takrorlang.',
+    '\u26A0\uFE0F Qoniqarli. Qonunchilikni qayta ko\u02bcrib chiqing.',
+    '\u274C Ko\u02bcp xatolar. Materiallarni chuqurroq o\u02bcrganing.'];
+  var mi=pct>=90?0:pct>=70?1:pct>=50?2:3;
+  var m=Math.floor(tu/60),s=tu%60,wH='';
+  if(wrongItems.length){
+    wH='<div class="wblk"><div class="wh">\u274C Xato javoblar ('+wrongItems.length+' ta)</div>';
+    wrongItems.slice(0,15).forEach(function(w){
+      wH+='<div class="wi"><div class="wiq">S'+w.num+': '+esc(w.txt)+'</div>'+
+        '<div class="wiy">\u2717 Siz: '+esc(w.yours)+'</div>'+
+        '<div class="wir">\u2713 To\u02bcg\u02bcri: '+esc(w.corT)+'</div></div>';
+    });
+    if(wrongItems.length>15)
+      wH+='<div style="color:var(--mu);font-size:.72rem;text-align:center;padding:8px">...va yana '+(wrongItems.length-15)+' ta</div>';
+    wH+='</div>';
+  }
+  var demoNote=IS_DEMO?'<div class="lockbox" style="margin-bottom:8px">Demo natija saqlanmadi<br>To\u02bcliq kurs uchun admin bilan bog\u02bclaning</div>':'';
+  var label=IS_DEMO?'Demo test':T.sec===-3?'Imtihon rejimi':T.rmode?'Xatolar testi':'Bo\u02bclim '+(T.sec+1);
+  document.getElementById('rbody').innerHTML=
+    '<div class="remj">'+(pct>=90?'\uD83C\uDFC6':pct>=70?'\u2705':pct>=50?'\u26A0\uFE0F':'\u274C')+'</div>'+
+    '<div class="rtit '+(pass?'p':'f')+'">'+(pass?'O\u02bctdingiz!':'Yiqildingiz')+'</div>'+
+    '<div class="rsub">'+label+' &middot; '+new Date().toLocaleDateString('uz-UZ')+'</div>'+
+    '<div class="ring '+(pass?'p':'f')+'"><span class="rn" style="color:'+(pass?'var(--gr)':'var(--rd)')+'">'+
+      correct+'</span><span class="rd2">/ '+total+'</span></div>'+
+    '<div class="st3">'+
+      '<div class="stc ok"><div class="stc-n">'+correct+'</div><div class="stc-l">\u2713 To\u02bcg\u02bcri</div></div>'+
+      '<div class="stc ng"><div class="stc-n">'+(total-correct)+'</div><div class="stc-l">\u2717 Xato</div></div>'+
+      '<div class="stc tm"><div class="stc-n">'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s+'</div><div class="stc-l">\u23F1 Vaqt</div></div>'+
+    '</div>'+
+    '<div class="rmsg">'+msgs[mi]+'</div>'+demoNote+wH+
+    '<div class="rbtns">'+
+      (IS_DEMO?'':'<button class="rbtn pr" onclick="retryS()">\uD83D\uDD04 Qayta urinish</button>')+
+      (wrongItems.length&&!IS_DEMO?'<button class="rbtn rd" onclick="retryW()">\u274C Faqat xatolar</button>':'')+
+      '<button class="rbtn pu" onclick="review()">\uD83D\uDC41 Javoblarni ko\u02bcrsatish</button>'+
+      (IS_DEMO?'<button class="rbtn tg" onclick="openTg()">\uD83D\uDCAC Admin bilan bog\u02bclanish</button>':
+               '<button class="rbtn" onclick="goHome()">\uD83C\uDFE0 Asosiy sahifa</button>')+
+    '</div>';
+  pg('pRes');
+}
+function goHome(){renderHome();pg('pHome');}
+function openTg(){window.open(TG_LINK,'_blank');}
+function retryS(){
+  if(T.sec===-3)startExam();
+  else if(T.rmode)startWrong();
+  else if(T.sec>=0)startSec(T.sec);
+  else startDemoTest();
+}
+function retryW(){
+  var wqs=T.qs.filter(function(_,i){return T.ans[i]!==T.qs[i][3];});
+  if(!wqs.length){goHome();return;}
+  beginTest(wqs,-1,'Xatolar testi',wqs.length+' ta savol',Math.max(wqs.length*SPQ,600),false);
+}
+function review(){T.fin=true;T.cur=0;renderQ();pg('pTest');}
+
+/* ══════════ ADMIN (test ichida) ══════════ */
+function openAdmin(){if(!IA)return;renderAdmin();pg('pAdm');}
+function renderAdmin(){
+  var wrng=gl(K_WRNG)||[],prog=gl(K_PROG)||{},st=gl(K_STAT)||{s:[],tc:0,tq:0};
+  var done=Object.keys(prog).length;
+  var avg=st.tq?Math.round(st.tc/st.tq*100):0;
+  document.getElementById('abody').innerHTML=
+    '<div class="acard"><h3>Boshqaruv</h3>'+
+      '<div style="font-size:.8rem;color:var(--mu2);line-height:1.6;margin-bottom:10px">Foydalanuvchilar (login/parol), ularning natijalari va savollar bazasi '+
+      '<b>Admin panel</b>da boshqariladi.</div>'+
+      '<a href="admin/" class="bm" style="display:block;text-align:center;text-decoration:none">⚙ Admin panelni ochish</a></div>'+
+    '<div class="acard"><h3>Siz</h3>'+
+      '<div style="font-size:.78rem;color:var(--mu2);line-height:1.7">'+
+        'Login: <b>'+esc(LIC?LIC.i:'-')+'</b><br>'+
+        'Ism: '+esc(LIC?LIC.n:'-')+'<br>'+
+        'Rol: '+esc(LIC?LIC.r:'-')+'<br>'+
+        'Muddat: '+(LIC&&LIC.e?fmtD(LIC.e):'cheksiz')+'<br>'+
+        'Qurilma: <span style="font-family:monospace">'+esc(getDeviceId())+'</span></div></div>'+
+    '<div class="acard"><h3>Shu qurilmadagi statistika</h3><div class="gst">'+
+      '<div class="gsi"><div class="gsi-n">'+BANK.length+'</div><div class="gsi-l">Savollar</div></div>'+
+      '<div class="gsi"><div class="gsi-n">'+SECS.length+'</div><div class="gsi-l">Boʼlimlar</div></div>'+
+      '<div class="gsi"><div class="gsi-n">'+done+'</div><div class="gsi-l">Yechilgan</div></div>'+
+      '<div class="gsi"><div class="gsi-n">'+avg+'%</div><div class="gsi-l">Oʼrtacha</div></div>'+
+    '</div></div>'+
+    '<div class="acard"><h3>Xizmat</h3>'+
+      '<div class="grow"><button class="gbtn rd" onclick="resetProg()">Natijalarni tozalash</button>'+
+      '<button class="gbtn rd" onclick="logout()">Tizimdan chiqish</button></div>'+
+      '<div style="font-size:.72rem;color:var(--mu);margin-top:6px">Xato savollar bankida: '+wrng.length+' ta</div></div>';
+}
+function resetProg(){
+  if(!confirm('Barcha natijalar va xatolar oʼchiriladi. Davom etasizmi?'))return;
+  rm(K_PROG);rm(K_WRNG);rm(K_STAT);
+  renderAdmin();
+}
+
+/* ══════════ EKRAN ══════════ */
+function pg(id){
+  document.querySelectorAll('.pg').forEach(function(el){el.classList.remove('on');});
+  var t=document.getElementById(id);if(t)t.classList.add('on');
+}
+
+/* ══════════ NUSXALASHNI CHEKLASH ══════════ */
+document.addEventListener('contextmenu',function(e){
+  if(document.getElementById('pTest').classList.contains('on'))e.preventDefault();
+});
+document.addEventListener('copy',function(e){
+  if(document.getElementById('pTest').classList.contains('on'))e.preventDefault();
+});
+
+window.pg=pg;window.startWrong=startWrong;window.logout=logout;
+window.exitTest=exitTest;window.prevQ=prevQ;window.nextQ=nextQ;window.pick=pick;
+window.revealAns=revealAns;window.retryS=retryS;window.retryW=retryW;window.review=review;
+window.openAdmin=openAdmin;window.doLogin=doLogin;window.togglePw=togglePw;
+window.startDemo=startDemo;window.startExam=startExam;window.goHome=goHome;window.openTg=openTg;
+window.resetProg=resetProg;
+
+/* ══════════ INIT ══════════ */
+window.addEventListener('load',function(){
+  if(!STORE_OK){
+    var wn=document.createElement('div');
+    wn.className='storewarn';
+    wn.innerHTML='⚠️ Brauzer xotirasi ishlamayapti — login va natijalar saqlanmaydi. '+
+      'Saytni oddiy (maxfiy boʼlmagan) oynada oching.';
+    document.body.appendChild(wn);
+  }
+  document.getElementById('appVer').textContent='Login va parol bilan kirish';
+  ['lgLogin','lgPass'].forEach(function(id){
+    document.getElementById(id).addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();doLogin();}});
+  });
+  var s=gl(K_SESS);
+  if(!s||!s.token||!s.user){pg('pWelcome');return;}
+  setUser(s);
+  loadMsg('Tekshirilmoqda…');
+  api('GET','/me',null,8000).then(function(d){
+    if(d._s===200){
+      s.user=d.user;ss(K_SESS,JSON.stringify(s));setUser(s);
+      return ensureBank(d.bank).then(function(ok){if(ok!==null)enterHome();});
+    }
+    if(d._s===401||d._s===403){authFail(d);return;}
+    /* internet yo'q yoki server javob bermadi — oflayn rejim */
+    if(s.user.exp&&Date.now()>s.user.exp){authFail({error:'Login muddati tugagan.'});return;}
+    var c=cachedBank();
+    if(c){setBank(c.bank);enterHome();}
+    else{pg('pWelcome');showMsg('wMsg','Internet aloqasi yoʼq. Ulanib, qayta oching.');}
+  });
+});
+})();
+</script>
+<script>
+/* ── Sayt / ilova rejimi: service worker, «Ilovani o'rnatish» tugmasi, iPhone eslatmasi ── */
+(function(){
+'use strict';
+var ua=navigator.userAgent||'';
+var isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&(navigator.maxTouchPoints||0)>1);
+var standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+  window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});
+}
+
+var deferred=null;
+var box=document.querySelector('#pWelcome .wbtns');
+var btn=document.createElement('button');
+btn.className='wbtn demo';btn.style.display='none';
+btn.innerHTML='&#x1F4F2; Ilova sifatida oʼrnatish';
+if(box)box.appendChild(btn);
+
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();deferred=e;if(!standalone)btn.style.display='';});
+window.addEventListener('appinstalled',function(){deferred=null;btn.style.display='none';});
+btn.addEventListener('click',function(){
+  if(deferred){
+    deferred.prompt();
+    deferred.userChoice.then(function(){deferred=null;btn.style.display='none';},function(){});
+  }else if(isIOS){
+    alert('iPhone / iPad:\n\n1. Safari’da pastdagi «Ulashish» (⬆️) tugmasini bosing.\n'+
+          '2. «На экран «Домой»» / «Add to Home Screen» ni tanlang.\n'+
+          '3. Dasturni bosh ekrandagi belgidan oching va Qurilma ID ni oʼsha yerdan oling.');
+  }
+});
+if(isIOS&&!standalone)btn.style.display='';
+
+/* iOS: Safari va bosh ekrandagi ilova xotirasi alohida — ular 2 xil qurilma hisoblanadi */
+if(isIOS&&!standalone){
+  var lf=document.querySelector('#pLogin .lbox .fg');
+  if(lf){
+    var n=document.createElement('div');
+    n.className='ainfo';
+    n.style.cssText='background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.35);color:var(--yl);margin-bottom:14px';
+    n.innerHTML='&#x1F4F1; <b>iPhone/iPad:</b> dasturni bosh ekranga qoʼshmoqchi boʼlsangiz, buni <b>kirishdan oldin</b> qiling '+
+      '(«Ulashish» → «Add to Home Screen») va oʼsha belgidan kiring. Safari va bosh ekrandagi ilova alohida qurilma hisoblanadi.';
+    lf.parentNode.insertBefore(n,lf);
+  }
+}
+})();
+</script>
+</body>
+</html>
