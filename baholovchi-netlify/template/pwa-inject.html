@@ -1,0 +1,49 @@
+<script>
+/* ── Sayt / ilova rejimi: service worker, «Ilovani o'rnatish» tugmasi, iPhone eslatmasi ── */
+(function(){
+'use strict';
+var ua=navigator.userAgent||'';
+var isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&(navigator.maxTouchPoints||0)>1);
+var standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+  window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});
+}
+
+var deferred=null;
+var box=document.querySelector('#pWelcome .wbtns');
+var btn=document.createElement('button');
+btn.className='wbtn demo';btn.style.display='none';
+btn.innerHTML='&#x1F4F2; Ilova sifatida oʼrnatish';
+if(box)box.appendChild(btn);
+
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();deferred=e;if(!standalone)btn.style.display='';});
+window.addEventListener('appinstalled',function(){deferred=null;btn.style.display='none';});
+btn.addEventListener('click',function(){
+  if(deferred){
+    deferred.prompt();
+    deferred.userChoice.then(function(){deferred=null;btn.style.display='none';},function(){});
+  }else if(isIOS){
+    alert('iPhone / iPad:\n\n1. Safari’da pastdagi «Ulashish» (⬆️) tugmasini bosing.\n'+
+          '2. «На экран «Домой»» / «Add to Home Screen» ni tanlang.\n'+
+          '3. Dasturni bosh ekrandagi belgidan oching va Qurilma ID ni oʼsha yerdan oling.');
+  }
+});
+if(isIOS&&!standalone)btn.style.display='';
+
+/* iOS: Safari va bosh ekrandagi ilova xotirasi alohida — Qurilma ID ham har xil bo'ladi */
+if(isIOS&&!standalone){
+  var ab=document.querySelector('#pActivate .device-id-box');
+  if(ab){
+    var n=document.createElement('div');
+    n.className='ainfo';
+    n.style.cssText='background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.35);color:var(--yl)';
+    n.innerHTML='&#x1F4F1; <b>iPhone/iPad:</b> dasturni bosh ekranga qoʼshmoqchi boʼlsangiz, buni <b>hozir</b> qiling '+
+      '(«Ulashish» → «Add to Home Screen») va Qurilma ID ni oʼsha ilovadan yuboring. '+
+      'Safari va bosh ekrandagi ilova uchun ID har xil boʼladi.';
+    ab.parentNode.insertBefore(n,ab);
+  }
+}
+})();
+</script>

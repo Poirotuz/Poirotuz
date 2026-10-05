@@ -1,0 +1,4 @@
+# Maxfiy kalit va pullik savollar bazasi ommaviy repoga tushmasligi kerak
+input/
+dist/
+*.zip

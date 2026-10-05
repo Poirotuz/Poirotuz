@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0a0a0f">
+<title>OVG — Admin</title>
+<link rel="icon" type="image/png" href="../icons/favicon-32.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{background:#0a0a0f radial-gradient(ellipse at 50% 0%,#1a0f28,#0a0a0f 70%) no-repeat;color:#e8e8f2;
+ font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Tahoma,sans-serif;min-height:100vh;
+ display:flex;align-items:center;justify-content:center;padding:20px}
+.box{background:#111118;border:1px solid #2a2a38;border-radius:20px;padding:30px 22px;width:100%;max-width:360px;text-align:center}
+.logo{font-size:2.6rem;margin-bottom:6px}
+h1{font-size:1.25rem;font-weight:800;margin-bottom:2px}
+.sub{font-size:.78rem;color:#6b6b88;margin-bottom:22px}
+input[type=password]{width:100%;background:#1f1f28;border:1.5px solid #3a3a50;border-radius:11px;padding:13px 14px;
+ color:#e8e8f2;font-size:.95rem;outline:none;font-family:inherit}
+input[type=password]:focus{border-color:#8b5cf6}
+.rem{display:flex;align-items:center;gap:8px;justify-content:flex-start;font-size:.8rem;color:#9999bb;margin:12px 2px 16px;cursor:pointer;text-align:left}
+.rem input{width:17px;height:17px;accent-color:#8b5cf6}
+button{width:100%;font:inherit;font-weight:800;border:none;border-radius:12px;padding:14px;cursor:pointer;
+ background:linear-gradient(135deg,#8b5cf6,#6030c0);color:#fff;font-size:1rem}
+button:disabled{opacity:.6;cursor:wait}
+.err{color:#ff3a5c;font-size:.8rem;margin-top:11px;min-height:1.2em}
+.back{display:inline-block;margin-top:14px;color:#9999bb;font-size:.8rem}
+.busy .box{visibility:hidden}
+</style></head><body>
+<form class="box" id="f" autocomplete="on">
+  <div class="logo">&#x1F510;</div>
+  <h1>Admin panel</h1>
+  <div class="sub">Baholovchi Test &middot; faqat admin uchun</div>
+  <input type="text" name="username" value="admin" autocomplete="username" hidden>
+  <input type="password" id="pw" name="password" placeholder="Admin paroli" autocomplete="current-password" autofocus>
+  <label class="rem"><input type="checkbox" id="rem"> Shu qurilmada eslab qolish (faqat shaxsiy qurilmada)</label>
+  <button type="submit" id="go">Kirish</button>
+  <div class="err" id="err"></div>
+  <a href="../" class="back">&larr; Testga qaytish</a>
+</form>
+<script type="application/json" id="ovgp">__OVG_PAYLOAD__</script>
+<script>
+/* Admin panel AES-256-GCM bilan shifrlangan. Kalit admin parolidan
+   PBKDF2-SHA256 orqali olinadi. Parolsiz sahifa ichidagi maxfiy kalitni ochib bo'lmaydi. */
+(function(){
+'use strict';
+var KR='ovg_adm_k';
+var P=JSON.parse(document.getElementById('ovgp').textContent);
+var f=document.getElementById('f'),pw=document.getElementById('pw'),rem=document.getElementById('rem'),
+    go=document.getElementById('go'),err=document.getElementById('err');
+function b64d(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+function b64e(u){var s='';for(var i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s);}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){}}
+function derive(pass){
+  return crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveBits'])
+    .then(function(k){return crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:b64d(P.s),iterations:P.it},k,256);})
+    .then(function(b){return new Uint8Array(b);});}
+function decrypt(raw){
+  return crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt'])
+    .then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(P.iv)},k,b64d(P.ct));})
+    .then(function(b){return new TextDecoder().decode(b);});}
+function show(html){document.open();document.write(html);document.close();}
+
+if(!window.crypto||!crypto.subtle){
+  err.textContent='Brauzer eski yoki sahifa https orqali ochilmagan. Chrome/Safari ning yangi versiyasidan foydalaning.';
+  go.disabled=true;return;}
+
+var saved=null;try{saved=JSON.parse(lsGet(KR)||'null');}catch(e){}
+if(saved&&saved.s===P.s&&saved.k){
+  document.body.className='busy';
+  decrypt(b64d(saved.k)).then(show,function(){lsSet(KR,null);document.body.className='';});
+}
+
+f.addEventListener('submit',function(e){
+  e.preventDefault();
+  var pass=(pw.value||'').trim().normalize('NFC');
+  if(!pass){err.textContent='Parolni kiriting.';return;}
+  err.textContent='';go.disabled=true;go.textContent='Tekshirilmoqda…';
+  derive(pass).then(function(raw){
+    return decrypt(raw).then(function(html){
+      if(rem.checked)lsSet(KR,JSON.stringify({s:P.s,k:b64e(raw)}));
+      show(html);});
+  }).catch(function(){
+    go.disabled=false;go.textContent='Kirish';
+    err.textContent='❌ Parol noto‘g‘ri.';pw.select();});
+});
+})();
+</script>
+</body></html>

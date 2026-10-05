@@ -1,0 +1,574 @@
+<!DOCTYPE html><html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0a0a0f">
+<title>OVG — Admin panel</title>
+<link rel="icon" type="image/png" href="../icons/favicon-32.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--s1:#111118;--s2:#18181f;--s3:#1f1f28;--bd:#2a2a38;--bd2:#3a3a50;
+ --tx:#e8e8f2;--mu:#6b6b88;--mu2:#9999bb;--gr:#00c87a;--rd:#ff3a5c;--yl:#f5a623;--bl:#4a90d9;--pu:#8b5cf6;--r:14px}
+body{background:var(--bg);color:var(--tx);font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Tahoma,sans-serif;padding:20px 16px}
+.wrap{max-width:900px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+h1{font-size:1.35rem;margin-bottom:4px}
+.sub{color:var(--mu);font-size:.82rem}
+.warn{background:rgba(255,58,92,.09);border:1px solid rgba(255,58,92,.35);border-radius:12px;
+ padding:13px 15px;font-size:.82rem;color:#ffb3c0;line-height:1.6;margin-bottom:18px}
+.warn b{color:var(--rd)}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:18px;margin-bottom:16px}
+.card h2{font-size:.95rem;margin-bottom:14px;color:var(--mu2);letter-spacing:.03em;text-transform:uppercase}
+.fg{margin-bottom:13px}
+label{display:block;font-size:.72rem;color:var(--mu);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{width:100%;background:var(--s3);border:1.5px solid var(--bd2);border-radius:11px;
+ padding:11px 13px;color:var(--tx);font-size:.9rem;outline:none;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--pu)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:640px){.row,.row3{grid-template-columns:1fr}}
+button,a.bs{font:inherit;font-weight:700;border:none;border-radius:11px;padding:12px 16px;cursor:pointer}
+.bm{width:100%;background:linear-gradient(135deg,var(--pu),#6030c0);color:#fff;font-size:.95rem}
+.bm.yl{background:linear-gradient(135deg,var(--yl),#e07020);color:#111}
+.bm:disabled{opacity:.6;cursor:wait}
+.bs{background:var(--s3);border:1.5px solid var(--bd2);color:var(--tx);font-size:.82rem;padding:9px 14px}
+a.bs{display:inline-block;text-decoration:none;border:1.5px solid var(--bd2);padding:9px 14px}
+.bs:hover{border-color:var(--pu)}
+.out{background:#07070b;border:1.5px dashed rgba(139,92,246,.45);border-radius:11px;padding:14px;margin-top:12px}
+.out .lbl{font-size:.68rem;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.pw{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.75;
+ word-break:break-all;color:var(--gr);user-select:all}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+.chip{font-size:.7rem;background:var(--s3);border:1px solid var(--bd2);border-radius:99px;padding:3px 10px;color:var(--mu2)}
+.err{color:var(--rd);font-size:.8rem;margin-top:9px;min-height:1em}
+.ok{color:var(--gr)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.74rem;margin-top:10px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--bd)}
+th{color:var(--mu);font-weight:600;text-transform:uppercase;font-size:.65rem;letter-spacing:.5px}
+td{color:var(--mu2);vertical-align:top}
+td.k{font-family:ui-monospace,monospace;color:var(--tx);white-space:nowrap}
+.acts{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.empty{color:var(--mu);font-size:.8rem;padding:14px 0;text-align:center}
+.badge{font-size:.62rem;padding:2px 7px;border-radius:99px;border:1px solid}
+.b-u{color:var(--bl);border-color:rgba(74,144,217,.5)}
+.b-a{color:var(--yl);border-color:rgba(245,166,35,.5)}
+.b-x{color:var(--rd);border-color:rgba(255,58,92,.5)}
+.steps{font-size:.84rem;color:var(--mu2);line-height:1.8}
+.steps b{color:var(--tx)}
+.link{font-family:ui-monospace,monospace;color:var(--yl);word-break:break-all}
+.did{font-family:ui-monospace,monospace;font-size:1rem;font-weight:800;color:var(--rd);letter-spacing:1.5px;user-select:all}
+.note{font-size:.76rem;color:var(--mu);line-height:1.6;margin-top:10px}
+</style></head><body><div class="wrap">
+
+<div class="top">
+  <div>
+    <h1>&#x1F511; OVG — Admin panel</h1>
+    <div class="sub">Baholovchi Test &middot; parollar va foydalanuvchilar</div>
+  </div>
+  <div class="acts" style="margin-top:0">
+    <a class="bs" href="../">&#x1F4CB; Testni ochish</a>
+    <button class="bs" onclick="lockNow()">&#x1F512; Qulflash</button>
+  </div>
+</div>
+
+<div class="warn">
+<b>DIQQAT.</b> Bu sahifa saytda <b>shifrlangan</b> holda turadi va faqat admin paroli bilan ochiladi.
+Admin parolini hech kimga bermang. Begona yoki umumiy kompyuterda ishlagan bo&#x2bc;lsangiz,
+ish tugagach <b>&laquo;&#x1F512; Qulflash&raquo;</b> tugmasini bosing.
+Foydalanuvchilarga faqat <b>sayt manzili</b> va <b>110 belgili parol</b> beriladi.
+</div>
+
+<div class="card">
+  <h2>Yangi foydalanuvchini ulash</h2>
+  <div class="steps">
+    <b>1.</b> Foydalanuvchiga taklif matnini yuboring (sayt manzili va ko&#x2bc;rsatma).<br>
+    <b>2.</b> U saytda <b>&laquo;&#x1F511; Kalit bilan kirish&raquo;</b> ni bosib, <b>Qurilma ID</b> ni sizga yuboradi.<br>
+    <b>3.</b> Pastdagi &laquo;Yangi parol yasash&raquo; bo&#x2bc;limida parol yasab, unga yuborasiz.
+  </div>
+  <div class="note">Sayt manzili: <span class="link" id="siteUrl"></span></div>
+  <div class="acts"><button class="bs" onclick="copyInvite(this)">&#x2709;&#xFE0F; Taklif matnini nusxalash</button></div>
+</div>
+
+<div class="card">
+  <h2>Yangi parol yasash</h2>
+  <div class="fg">
+    <label>Qurilma ID (foydalanuvchi dasturdan nusxalab yuboradi)</label>
+    <input id="dev" placeholder="Masalan: D-1A2B-3C4D-5E6F-7890" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="row">
+    <div class="fg"><label>Foydalanuvchi ismi (daftar uchun)</label>
+      <input id="nm" placeholder="Aliyev Sardor" autocomplete="off"></div>
+    <div class="fg"><label>Telefon / Telegram (ixtiyoriy)</label>
+      <input id="ph" placeholder="+998 90 123 45 67 yoki @username" autocomplete="off"></div>
+  </div>
+  <div class="row3">
+    <div class="fg"><label>Rol</label>
+      <select id="role"><option value="U">Foydalanuvchi</option><option value="A">Admin</option></select></div>
+    <div class="fg"><label>Amal qilish muddati</label>
+      <select id="term" onchange="onTerm()">
+        <option value="30">30 kun</option><option value="90">90 kun</option>
+        <option value="180">180 kun</option><option value="365" selected>1 yil</option>
+        <option value="730">2 yil</option><option value="0">Cheksiz</option>
+        <option value="x">Aniq sana…</option></select></div>
+    <div class="fg" id="dtBox" style="display:none"><label>Tugash sanasi</label>
+      <input type="date" id="dt"></div>
+  </div>
+  <button class="bm" onclick="gen()">Parol yasash</button>
+  <div class="err" id="err"></div>
+  <div class="out" id="out" style="display:none">
+    <div class="lbl">110 belgili parol</div>
+    <div class="pw" id="pw"></div>
+    <div class="meta" id="meta"></div>
+    <div class="acts">
+      <button class="bs" onclick="copyPw(this)">&#x1F4CB; Nusxalash</button>
+      <button class="bs" onclick="copyMsg(this)">&#x2709;&#xFE0F; Xabar matni bilan nusxalash</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Testni boshqarish (shu qurilmada admin bo&#x2bc;lib kirish)</h2>
+  <div class="steps">
+    Shu brauzerning Qurilma ID si: <span class="did" id="myDid">…</span><br>
+    Tugmani bossangiz, shu qurilma uchun <b>cheksiz Admin parol</b> yasaladi va test
+    <b>admin rejimida</b> ochiladi: barcha 1145 savol, imtihon, statistika, kalitni tekshirish.
+  </div>
+  <div class="acts"><button class="bm yl" style="width:auto" onclick="selfAdmin()">&#x1F451; Testni admin sifatida ochish</button></div>
+  <div class="err" id="selfErr"></div>
+</div>
+
+<div class="card">
+  <h2>Berilgan parollar daftari (<span id="cnt">0</span>)</h2>
+  <input id="q" placeholder="Ism, telefon, qurilma ID yoki kalit ID bo&#x2bc;yicha qidirish…" oninput="renderLog()" style="margin-bottom:4px">
+  <div class="tw" id="tbl"></div>
+  <div class="acts">
+    <button class="bs" onclick="expCsv()">&#x2B07;&#xFE0F; CSV (Excel) yuklab olish</button>
+    <button class="bs" onclick="expJson()">&#x2B07;&#xFE0F; Zaxira (JSON)</button>
+    <button class="bs" onclick="impJson()">&#x2B06;&#xFE0F; Zaxiradan tiklash</button>
+    <button class="bs" onclick="clr()">&#x1F5D1; Tozalash</button>
+  </div>
+  <div class="note">Daftar shu brauzerda saqlanadi. Boshqa qurilmaga o&#x2bc;tkazish uchun &laquo;Zaxira (JSON)&raquo; ni yuklab,
+    o&#x2bc;sha qurilmada &laquo;Zaxiradan tiklash&raquo; ni bosing. Eski (fayl ko&#x2bc;rinishidagi) generator zaxirasini ham shu yo&#x2bc;l bilan qo&#x2bc;shish mumkin.</div>
+  <input type="file" id="fimp" accept=".json,application/json" style="display:none" onchange="doImp(this)">
+</div>
+
+<div class="card">
+  <h2>Admin parolini almashtirish</h2>
+  <div class="row3">
+    <div class="fg"><label>Joriy parol</label><input type="password" id="cp0" autocomplete="current-password"></div>
+    <div class="fg"><label>Yangi parol (kamida 10 belgi)</label><input type="password" id="cp1" autocomplete="new-password"></div>
+    <div class="fg"><label>Yangi parol (takror)</label><input type="password" id="cp2" autocomplete="new-password"></div>
+  </div>
+  <button class="bm" id="cpBtn" onclick="chgPw()">Yangi admin faylini yasash</button>
+  <div class="err" id="cpErr"></div>
+  <div class="note">Natijada yangi <b>index.html</b> yuklab olinadi. Uni sayt papkasidagi <b>admin/index.html</b> o&#x2bc;rniga qo&#x2bc;yib,
+    papkani Netlify&rsquo;dagi saytingizning <b>Deploys</b> bo&#x2bc;limiga qayta tashlang. Shundan so&#x2bc;ng faqat yangi parol ishlaydi.</div>
+</div>
+
+<script>
+/* ── OVG mini-crypto: SHA-256 + secp256r1 (P-256) ECDSA ── */
+var OVGC=(function(){
+'use strict';
+/* ---------- base64url ---------- */
+function b64uEnc(bytes){var s='';for(var i=0;i<bytes.length;i++)s+=String.fromCharCode(bytes[i]);
+  return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function b64uDec(str){var s=String(str).replace(/-/g,'+').replace(/_/g,'/');
+  while(s.length%4)s+='=';var bin=atob(s);var b=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);return b;}
+function utf8Enc(str){var out=[],i,c;for(i=0;i<str.length;i++){c=str.charCodeAt(i);
+  if(c<0x80)out.push(c);
+  else if(c<0x800){out.push(0xc0|(c>>6),0x80|(c&63));}
+  else if(c>=0xd800&&c<0xdc00){var c2=str.charCodeAt(++i);var cp=0x10000+((c-0xd800)<<10)+(c2-0xdc00);
+    out.push(0xf0|(cp>>18),0x80|((cp>>12)&63),0x80|((cp>>6)&63),0x80|(cp&63));}
+  else{out.push(0xe0|(c>>12),0x80|((c>>6)&63),0x80|(c&63));}}
+  return new Uint8Array(out);}
+function utf8Dec(bytes){var s='',i=0,c;while(i<bytes.length){c=bytes[i++];
+  if(c<0x80)s+=String.fromCharCode(c);
+  else if(c<0xe0)s+=String.fromCharCode(((c&31)<<6)|(bytes[i++]&63));
+  else if(c<0xf0)s+=String.fromCharCode(((c&15)<<12)|((bytes[i++]&63)<<6)|(bytes[i++]&63));
+  else{var cp=((c&7)<<18)|((bytes[i++]&63)<<12)|((bytes[i++]&63)<<6)|(bytes[i++]&63);cp-=0x10000;
+    s+=String.fromCharCode(0xd800+(cp>>10),0xdc00+(cp&1023));}}
+  return s;}
+
+/* ---------- SHA-256 ---------- */
+var K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+function sha256(msg){
+  var H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  var l=msg.length,bl=l*8;
+  var withPad=new Uint8Array((((l+9)>>6)+1)<<6);
+  withPad.set(msg);withPad[l]=0x80;
+  var hi=Math.floor(bl/4294967296),lo=bl>>>0;
+  var n=withPad.length;
+  withPad[n-8]=(hi>>>24)&255;withPad[n-7]=(hi>>>16)&255;withPad[n-6]=(hi>>>8)&255;withPad[n-5]=hi&255;
+  withPad[n-4]=(lo>>>24)&255;withPad[n-3]=(lo>>>16)&255;withPad[n-2]=(lo>>>8)&255;withPad[n-1]=lo&255;
+  var w=new Int32Array(64);
+  for(var off=0;off<n;off+=64){
+    for(var i=0;i<16;i++)w[i]=(withPad[off+i*4]<<24)|(withPad[off+i*4+1]<<16)|(withPad[off+i*4+2]<<8)|withPad[off+i*4+3];
+    for(i=16;i<64;i++){
+      var g0=w[i-15],g1=w[i-2];
+      var s0=((g0>>>7)|(g0<<25))^((g0>>>18)|(g0<<14))^(g0>>>3);
+      var s1=((g1>>>17)|(g1<<15))^((g1>>>19)|(g1<<13))^(g1>>>10);
+      w[i]=(w[i-16]+s0+w[i-7]+s1)|0;}
+    var a=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+    for(i=0;i<64;i++){
+      var S1=((e>>>6)|(e<<26))^((e>>>11)|(e<<21))^((e>>>25)|(e<<7));
+      var ch=(e&f)^(~e&g);
+      var t1=(h+S1+ch+K[i]+w[i])|0;
+      var S0=((a>>>2)|(a<<30))^((a>>>13)|(a<<19))^((a>>>22)|(a<<10));
+      var mj=(a&b)^(a&c)^(b&c);
+      var t2=(S0+mj)|0;
+      h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;}
+    H[0]=(H[0]+a)|0;H[1]=(H[1]+b)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;
+    H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0;}
+  var out=new Uint8Array(32);
+  for(i=0;i<8;i++){out[i*4]=(H[i]>>>24)&255;out[i*4+1]=(H[i]>>>16)&255;out[i*4+2]=(H[i]>>>8)&255;out[i*4+3]=H[i]&255;}
+  return out;}
+function sha256hex(str){var b=sha256(utf8Enc(str)),s='';
+  for(var i=0;i<b.length;i++)s+=('0'+b[i].toString(16)).slice(-2);return s;}
+
+/* ---------- P-256 curve ---------- */
+var P=BigInt('0xffffffff00000001000000000000000000000000ffffffffffffffffffffffff');
+var A=BigInt('0xffffffff00000001000000000000000000000000fffffffffffffffffffffffc');
+var B=BigInt('0x5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b');
+var N=BigInt('0xffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551');
+var GX=BigInt('0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296');
+var GY=BigInt('0x4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5');
+var ZERO=BigInt(0),ONE=BigInt(1),TWO=BigInt(2),THREE=BigInt(3);
+function mod(a,m){var r=a%m;return r<ZERO?r+m:r;}
+function inv(a,m){/* extended euclid */
+  var lm=ONE,hm=ZERO,low=mod(a,m),high=m;
+  while(low>ONE){var r=high/low;var nm=hm-lm*r,nw=high-low*r;hm=lm;high=low;lm=nm;low=nw;}
+  return mod(lm,m);}
+/* Jacobian point ops */
+function jDouble(p){
+  var X=p[0],Y=p[1],Z=p[2];
+  if(Y===ZERO)return [ZERO,ZERO,ZERO];
+  var YY=mod(Y*Y,P);
+  var S=mod(BigInt(4)*X*YY,P);
+  var ZZ=mod(Z*Z,P);
+  var M=mod(THREE*X*X+A*ZZ*ZZ,P);
+  var nx=mod(M*M-TWO*S,P);
+  var ny=mod(M*(S-nx)-BigInt(8)*YY*YY,P);
+  var nz=mod(TWO*Y*Z,P);
+  return [nx,ny,nz];}
+function jAdd(p,q){
+  if(p[2]===ZERO)return q;
+  if(q[2]===ZERO)return p;
+  var Z1Z1=mod(p[2]*p[2],P),Z2Z2=mod(q[2]*q[2],P);
+  var U1=mod(p[0]*Z2Z2,P),U2=mod(q[0]*Z1Z1,P);
+  var S1=mod(p[1]*q[2]*Z2Z2,P),S2=mod(q[1]*p[2]*Z1Z1,P);
+  if(U1===U2){ if(S1!==S2) return [ZERO,ZERO,ZERO]; return jDouble(p); }
+  var H=mod(U2-U1,P),R=mod(S2-S1,P);
+  var HH=mod(H*H,P),HHH=mod(H*HH,P);
+  var V=mod(U1*HH,P);
+  var nx=mod(R*R-HHH-TWO*V,P);
+  var ny=mod(R*(V-nx)-S1*HHH,P);
+  var nz=mod(H*p[2]*q[2],P);
+  return [nx,ny,nz];}
+function jMul(k,p){
+  var r=[ZERO,ZERO,ZERO],acc=p;
+  while(k>ZERO){ if(k&ONE)r=jAdd(r,acc); acc=jDouble(acc); k>>=ONE; }
+  return r;}
+function jToAffine(p){
+  if(p[2]===ZERO)return null;
+  var zi=inv(p[2],P),zi2=mod(zi*zi,P);
+  return [mod(p[0]*zi2,P),mod(p[1]*zi2*zi,P)];}
+function bytesToBig(b){var h='';for(var i=0;i<b.length;i++)h+=('0'+b[i].toString(16)).slice(-2);
+  return h?BigInt('0x'+h):ZERO;}
+function bigToBytes(n,len){var h=n.toString(16);while(h.length<len*2)h='0'+h;
+  var b=new Uint8Array(len);for(var i=0;i<len;i++)b[i]=parseInt(h.substr(i*2,2),16);return b;}
+
+/* ---------- ECDSA ---------- */
+function verify(pubJwk,msgBytes,sigBytes){
+  try{
+    if(sigBytes.length!==64)return false;
+    var r=bytesToBig(sigBytes.slice(0,32)),s=bytesToBig(sigBytes.slice(32,64));
+    if(r<=ZERO||r>=N||s<=ZERO||s>=N)return false;
+    var qx=bytesToBig(b64uDec(pubJwk.x)),qy=bytesToBig(b64uDec(pubJwk.y));
+    /* point on curve? */
+    if(mod(qy*qy-(qx*qx*qx+A*qx+B),P)!==ZERO)return false;
+    var e=bytesToBig(sha256(msgBytes));
+    var w=inv(s,N);
+    var u1=mod(e*w,N),u2=mod(r*w,N);
+    var pt=jAdd(jMul(u1,[GX,GY,ONE]),jMul(u2,[qx,qy,ONE]));
+    var aff=jToAffine(pt);
+    if(!aff)return false;
+    return mod(aff[0],N)===mod(r,N);
+  }catch(err){return false;}}
+function sign(privJwk,msgBytes){
+  var d=bytesToBig(b64uDec(privJwk.d));
+  var e=bytesToBig(sha256(msgBytes));
+  for(var tries=0;tries<64;tries++){
+    var kb=new Uint8Array(32);
+    (window.crypto||window.msCrypto).getRandomValues(kb);
+    var k=mod(bytesToBig(kb),N);
+    if(k===ZERO)continue;
+    var aff=jToAffine(jMul(k,[GX,GY,ONE]));
+    if(!aff)continue;
+    var r=mod(aff[0],N);
+    if(r===ZERO)continue;
+    var s=mod(inv(k,N)*(e+d*r),N);
+    if(s===ZERO)continue;
+    var out=new Uint8Array(64);
+    out.set(bigToBytes(r,32),0);out.set(bigToBytes(s,32),32);
+    return out;}
+  throw new Error('sign failed');}
+function makeKeypair(){
+  var kb=new Uint8Array(32);
+  (window.crypto||window.msCrypto).getRandomValues(kb);
+  var d=mod(bytesToBig(kb),N);
+  if(d===ZERO)d=ONE;
+  var aff=jToAffine(jMul(d,[GX,GY,ONE]));
+  var pub={kty:'EC',crv:'P-256',x:b64uEnc(bigToBytes(aff[0],32)),y:b64uEnc(bigToBytes(aff[1],32))};
+  var prv={kty:'EC',crv:'P-256',x:pub.x,y:pub.y,d:b64uEnc(bigToBytes(d,32))};
+  return {pub:pub,prv:prv};}
+
+return {b64uEnc:b64uEnc,b64uDec:b64uDec,utf8Enc:utf8Enc,utf8Dec:utf8Dec,
+        sha256:sha256,sha256hex:sha256hex,verify:verify,sign:sign,makeKeypair:makeKeypair};
+})();
+/*__OVG_KEYS__*/
+var B62='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+var EPOCH=Date.UTC(2026,0,1),DAY=86400000;
+var SITE=location.href.replace(/[?#].*$/,'').replace(/admin\/?(index\.html)?$/,'');
+
+function b62e(n,w){var o='';n=Math.max(0,Math.floor(n));
+  while(n>0){o=B62.charAt(n%62)+o;n=Math.floor(n/62);}
+  while(o.length<w)o='0'+o;return o;}
+function bytesToB62(b,w){
+  var n=BigInt(0);for(var i=0;i<b.length;i++)n=n*BigInt(256)+BigInt(b[i]);
+  var o='',S=BigInt(62);
+  while(n>BigInt(0)){o=B62.charAt(Number(n%S))+o;n=n/S;}
+  while(o.length<w)o='0'+o;return o;}
+function rnd62(k){var o='';while(o.length<k){var b=new Uint8Array(k);crypto.getRandomValues(b);
+  for(var i=0;i<k&&o.length<k;i++)if(b[i]<248)o+=B62.charAt(b[i]%62);}return o;}
+function chkOf(ex,r,iat,ser){
+  var h=OVGC.sha256hex('OVG5CHK|'+ex+'|'+r+'|'+iat+'|'+ser),o='';
+  for(var i=0;i<3;i++)o+=B62.charAt(parseInt(h.substr(i*2,2),16)%62);
+  return o;}
+function msgFor2(dev,ex,r,iat,ser){return OVGC.utf8Enc('OVG5|'+dev+'|'+ex+'|'+r+'|'+iat+'|'+ser);}
+function dayIdx(ms){return Math.floor((ms-EPOCH)/DAY);}
+function fmtD(ms){var d=new Date(ms);
+  return ('0'+d.getDate()).slice(-2)+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+d.getFullYear();}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+function onTerm(){document.getElementById('dtBox').style.display=
+  document.getElementById('term').value==='x'?'':'none';}
+
+/* ---- parol yasash (testdagi verifyPw110 bilan bir xil format) ----
+   [2 muddat][1 rol][2 berilgan sana][16 seriya][3 nazorat][86 ECDSA P-256 imzo] */
+function makePw(dev,r,t,dateVal){
+  var ex,expMs=0;
+  if(t==='0'){ex='zz';}
+  else{
+    var target;
+    if(t==='x'){
+      if(!dateVal)return{e:'Tugash sanasini tanlang.'};
+      var p=dateVal.split('-');target=Date.UTC(+p[0],+p[1]-1,+p[2]);}
+    else target=Date.now()+parseInt(t,10)*DAY;
+    var d=dayIdx(target)-1;
+    if(d<0)return{e:'Sana oʼtib ketgan — kelajakdagi sanani tanlang.'};
+    if(d>3842)return{e:'Muddat juda uzoq (maksimum ~10,5 yil). «Cheksiz» ni tanlang.'};
+    ex=b62e(d,2);expMs=EPOCH+(d+1)*DAY;}
+  var iat=b62e(Math.max(0,dayIdx(Date.now())),2);
+  var ser=rnd62(16);
+  var chk=chkOf(ex,r,iat,ser);
+  var sig;
+  try{sig=OVGC.sign(PRV,msgFor2(dev,ex,r,iat,ser));}
+  catch(e){return{e:'Imzolashda xato: '+e.message};}
+  var pw=ex+r+iat+ser+chk+bytesToB62(sig,86);
+  if(pw.length!==110)return{e:'Ichki xato: uzunlik '+pw.length};
+  if(!OVGC.verify(PUB,msgFor2(dev,ex,r,iat,ser),sig))return{e:'Ichki xato: imzo tekshiruvdan oʼtmadi'};
+  return{pw:pw,ser:ser,kid:ser.substring(0,6),exp:expMs};
+}
+
+var LAST=null;
+function gen(){
+  var err=document.getElementById('err');err.className='err';err.textContent='';
+  document.getElementById('out').style.display='none';
+  var dev=(document.getElementById('dev').value||'').replace(/\s+/g,'').toUpperCase();
+  if(!/^[MTD]-[0-9A-F]{4}(-[0-9A-F]{4}){3}$/.test(dev)){
+    err.textContent='Qurilma ID formati notoʼgʼri. Namuna: D-1A2B-3C4D-5E6F-7890';return;}
+  var r=document.getElementById('role').value;
+  var res=makePw(dev,r,document.getElementById('term').value,document.getElementById('dt').value);
+  if(res.e){err.textContent=res.e;return;}
+  LAST={pw:res.pw,dev:dev,nm:(document.getElementById('nm').value||'').trim(),
+        ph:(document.getElementById('ph').value||'').trim(),
+        role:r,ser:res.ser,kid:res.kid,exp:res.exp,at:Date.now()};
+  document.getElementById('pw').textContent=res.pw;
+  document.getElementById('meta').innerHTML=
+    '<span class="chip">Kalit ID: <b>'+esc(LAST.kid)+'</b></span>'+
+    '<span class="chip">Rol: '+(r==='A'?'Admin':'Foydalanuvchi')+'</span>'+
+    '<span class="chip">Muddat: '+(res.exp?fmtD(res.exp):'cheksiz')+'</span>'+
+    '<span class="chip">Uzunlik: 110</span>';
+  document.getElementById('out').style.display='';
+  err.className='err ok';err.textContent='✓ Parol tayyor va imzo tekshiruvidan oʼtdi.';
+  addLog({t:LAST.at,dev:dev,nm:LAST.nm,ph:LAST.ph,r:r,kid:LAST.kid,ser:res.ser,exp:res.exp,pw:res.pw});
+}
+function msgText(){
+  return 'Assalomu alaykum'+(LAST.nm?', '+LAST.nm:'')+'!\n\n'+
+   'Baholovchi Test dasturi uchun parolingiz:\n\n'+LAST.pw+'\n\n'+
+   'Muddati: '+(LAST.exp?fmtD(LAST.exp):'cheksiz')+'\n'+
+   'Kalit ID: '+LAST.kid+'\n\n'+
+   'Dastur manzili: '+SITE+'\n'+
+   'Parolni toʼliq nusxalab, dasturdagi «Kalit bilan kirish» → «PAROL» maydoniga joylashtiring.\n'+
+   'Parol faqat Qurilma ID olingan qurilma va brauzerda ishlaydi.';}
+function inviteText(){
+  return 'Assalomu alaykum!\n\n'+
+   'Baholovchi Test dasturi: '+SITE+'\n\n'+
+   '1. Havolani telefon yoki kompyuterda oching (Chrome yoki Safari).\n'+
+   '2. «🔑 Kalit bilan kirish» tugmasini bosing.\n'+
+   '3. Ekrandagi «Qurilma ID» kodini nusxalab, menga yuboring.\n'+
+   '4. Men yuborgan parolni «PAROL» maydoniga joylashtirasiz.\n\n'+
+   'iPhone/iPad: avval Safari’da «Ulashish» (⬆️) → «На экран Домой / Add to Home Screen» qiling, '+
+   'dasturni oʼsha belgidan oching va Qurilma ID ni oʼshandan yuboring.';}
+function cp(txt,btn){
+  function done(){if(!btn)return;var o=btn.textContent;btn.textContent='✓ Nusxalandi';setTimeout(function(){btn.textContent=o;},1600);}
+  function fb(){var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity=0;
+    document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);done();}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done,fb);
+  else fb();}
+function copyPw(b){if(LAST)cp(LAST.pw,b);}
+function copyMsg(b){if(LAST)cp(msgText(),b);}
+function copyInvite(b){cp(inviteText(),b);}
+
+/* ---- shu qurilma (testdagi getDeviceId bilan aynan bir xil hisoblanadi) ---- */
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,String(v));}catch(e){}}
+function hwProfile(){
+  var w=(screen&&screen.width)||0,h=(screen&&screen.height)||0;
+  return [Math.min(w,h)+'x'+Math.max(w,h),
+          (screen&&screen.colorDepth)||0,
+          (navigator.platform||'').substring(0,12),
+          navigator.hardwareConcurrency||0,
+          ((navigator.maxTouchPoints||0)>0?1:0)].join('|');}
+function detectType(){
+  var ua=navigator.userAgent||'';
+  if(/iPad|Tablet|PlayBook|Silk/i.test(ua)||(/Android/i.test(ua)&&!/Mobile/i.test(ua)))return 'T';
+  if(/Mobi|Android|iPhone|iPod|IEMobile|Windows Phone/i.test(ua))return 'M';
+  return 'D';}
+function devType(){var t=lsGet('ovg4_type');
+  if(t==='M'||t==='D'||t==='T')return t;
+  t=detectType();lsSet('ovg4_type',t);return t;}
+function myDeviceId(){
+  var inst=lsGet('ovg4_inst');
+  if(!inst){var r=new Uint8Array(16);crypto.getRandomValues(r);inst=OVGC.b64uEnc(r);lsSet('ovg4_inst',inst);}
+  var h=OVGC.sha256hex(inst+'::'+hwProfile()).toUpperCase();
+  return devType()+'-'+h.substring(0,16).replace(/(.{4})(?=.)/g,'$1-');}
+function selfAdmin(){
+  var el=document.getElementById('selfErr');el.className='err';el.textContent='';
+  try{localStorage.setItem('__t','1');localStorage.removeItem('__t');}
+  catch(e){el.textContent='Brauzer xotirasi ishlamayapti (maxfiy rejim?). Oddiy oynada oching.';return;}
+  if(lsGet('ovg4_lic')&&!confirm('Shu qurilmadagi joriy test paroli Admin paroliga almashtiriladi. Davom etasizmi?'))return;
+  var dev=myDeviceId();
+  var res=makePw(dev,'A','0');
+  if(res.e){el.textContent=res.e;return;}
+  lsSet('ovg4_lic',res.pw);
+  if(!lsGet('ovg4_name'))lsSet('ovg4_name','Admin');
+  addLog({t:Date.now(),dev:dev,nm:'Admin (shu qurilma)',ph:'',r:'A',kid:res.kid,ser:res.ser,exp:0,pw:res.pw});
+  location.href=SITE;}
+
+/* ---- daftar ---- */
+var LOGK='ovg_gen_log';
+function load(){try{return JSON.parse(localStorage.getItem(LOGK))||[];}catch(e){return[];}}
+function save(L){try{localStorage.setItem(LOGK,JSON.stringify(L));}catch(e){}}
+function addLog(x){var L=load();L.unshift(x);save(L);renderLog();}
+function renderLog(){
+  var L=load(),q=(document.getElementById('q').value||'').trim().toLowerCase();
+  document.getElementById('cnt').textContent=L.length;
+  var f=q?L.filter(function(x){return ((x.nm||'')+' '+(x.ph||'')+' '+x.dev+' '+x.ser+' '+x.kid).toLowerCase().indexOf(q)>=0;}):L;
+  var el=document.getElementById('tbl');
+  if(!f.length){el.innerHTML='<div class="empty">'+(L.length?'Topilmadi':'Hozircha parol berilmagan')+'</div>';return;}
+  var now=Date.now();
+  var h='<table><tr><th>Sana</th><th>Ism</th><th>Aloqa</th><th>Qurilma ID</th><th>Kalit ID</th><th>Rol</th><th>Muddat</th><th></th></tr>';
+  f.slice(0,300).forEach(function(x){
+    var expired=x.exp&&x.exp<now;
+    h+='<tr><td>'+fmtD(x.t)+'</td><td>'+esc(x.nm||'—')+'</td><td>'+esc(x.ph||'')+'</td><td class="k">'+esc(x.dev)+'</td>'+
+       '<td class="k">'+esc(x.kid)+'</td><td><span class="badge '+(x.r==='A'?'b-a':'b-u')+'">'+
+       (x.r==='A'?'Admin':'User')+'</span></td><td>'+(x.exp?(expired?'<span class="badge b-x">tugagan</span> ':'')+fmtD(x.exp):'cheksiz')+'</td>'+
+       '<td><button class="bs" style="padding:4px 9px;font-size:.68rem" data-ser="'+esc(x.ser)+'" onclick="copyRow(this)">📋</button></td></tr>';});
+  el.innerHTML=h+'</table>';}
+function copyRow(b){var s=b.getAttribute('data-ser');
+  var x=load().filter(function(y){return y.ser===s;})[0];if(x)cp(x.pw,b);}
+function dl(name,txt,mime){
+  var b=new Blob([txt],{type:mime||'text/plain;charset=utf-8'}),u=URL.createObjectURL(b);
+  var a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(u);},1500);}
+function expCsv(){
+  var L=load();if(!L.length){alert('Daftar boʼsh');return;}
+  var rows=[['Sana','Ism','Aloqa','Qurilma ID','Kalit ID','Seriya','Rol','Muddat','Parol']];
+  L.forEach(function(x){rows.push([fmtD(x.t),x.nm||'',x.ph||'',x.dev,x.kid,x.ser,
+    x.r==='A'?'Admin':'User',x.exp?fmtD(x.exp):'cheksiz',x.pw]);});
+  dl('OVG_parollar_'+fmtD(Date.now()).replace(/\./g,'-')+'.csv',
+     String.fromCharCode(0xFEFF)+rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(';');}).join('\n'),
+     'text/csv;charset=utf-8');}
+function expJson(){dl('OVG_daftar_zaxira_'+fmtD(Date.now()).replace(/\./g,'-')+'.json',JSON.stringify(load(),null,1),'application/json');}
+function impJson(){document.getElementById('fimp').click();}
+function doImp(inp){
+  var f=inp.files&&inp.files[0];if(!f)return;var rd=new FileReader();
+  rd.onload=function(){try{var a=JSON.parse(rd.result);
+    if(!Array.isArray(a))throw 0;
+    var L=load(),seen={};L.forEach(function(x){seen[x.ser]=1;});
+    a.forEach(function(x){if(x&&x.ser&&x.pw&&!seen[x.ser]){L.push(x);seen[x.ser]=1;}});
+    L.sort(function(p,q){return q.t-p.t;});save(L);renderLog();alert('Tiklandi. Jami: '+L.length);}
+    catch(e){alert('Fayl notoʼgʼri.');}inp.value='';};
+  rd.readAsText(f);}
+function clr(){if(confirm('Daftar butunlay tozalansinmi? Bu amalni qaytarib boʼlmaydi.\n(Avval «Zaxira (JSON)» ni yuklab olish tavsiya etiladi.)')){save([]);renderLog();}}
+
+/* ---- qulflash va admin parolini almashtirish ---- */
+function lockNow(){try{localStorage.removeItem('ovg_adm_k');}catch(e){}location.reload();}
+var PB_IT=600000;
+function b64e(u){var s='';for(var i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s);}
+function b64d(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+function pbkdf2(pass,salt,it){
+  return crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveBits'])
+    .then(function(k){return crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:salt,iterations:it},k,256);})
+    .then(function(b){return new Uint8Array(b);});}
+function chgPw(){
+  var el=document.getElementById('cpErr'),btn=document.getElementById('cpBtn');el.className='err';el.textContent='';
+  var cur=(document.getElementById('cp0').value||'').trim().normalize('NFC'),
+      n1=(document.getElementById('cp1').value||'').trim().normalize('NFC'),
+      n2=(document.getElementById('cp2').value||'').trim().normalize('NFC');
+  if(!cur){el.textContent='Joriy parolni kiriting.';return;}
+  if(n1.length<10){el.textContent='Yangi parol kamida 10 belgidan iborat boʼlsin.';return;}
+  if(n1!==n2){el.textContent='Yangi parollar bir xil emas.';return;}
+  if(n1===cur){el.textContent='Yangi parol joriy paroldan farq qilsin.';return;}
+  btn.disabled=true;btn.textContent='Ishlanmoqda…';
+  var shell,m,P,plain;
+  fetch(location.href.replace(/#.*$/,''),{cache:'no-store'}).then(function(r){
+    if(!r.ok)throw new Error('Saytdan admin faylini olib boʼlmadi ('+r.status+')');return r.text();
+  }).then(function(t){
+    shell=t;m=shell.match(/(<script type="application\/json" id="ovgp">)([\s\S]*?)(<\/script>)/);
+    if(!m)throw new Error('Admin fayli tuzilmasi notanish');
+    P=JSON.parse(m[2]);return pbkdf2(cur,b64d(P.s),P.it);
+  }).then(function(raw){
+    return crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt'])
+      .then(function(k){return crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(P.iv)},k,b64d(P.ct));})
+      .catch(function(){throw new Error('Joriy parol notoʼgʼri.');});
+  }).then(function(pt){
+    plain=pt;var salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+    return pbkdf2(n1,salt,PB_IT).then(function(raw2){
+      return crypto.subtle.importKey('raw',raw2,'AES-GCM',false,['encrypt']);
+    }).then(function(k2){return crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k2,plain);})
+      .then(function(ct){return JSON.stringify({v:1,it:PB_IT,s:b64e(salt),iv:b64e(iv),ct:b64e(new Uint8Array(ct))});});
+  }).then(function(np){
+    var out=shell.replace(m[0],function(){return m[1]+np+m[3];});
+    dl('index.html',out,'text/html;charset=utf-8');
+    ['cp0','cp1','cp2'].forEach(function(id){document.getElementById(id).value='';});
+    el.className='err ok';
+    el.textContent='✓ Yangi index.html yuklab olindi. Uni admin/index.html oʼrniga qoʼyib, saytni qayta joylang.';
+  }).catch(function(e){el.textContent=e.message||String(e);})
+  .then(function(){btn.disabled=false;btn.textContent='Yangi admin faylini yasash';});
+}
+
+document.getElementById('siteUrl').textContent=SITE;
+document.getElementById('myDid').textContent=myDeviceId();
+renderLog();
+</script></div></body></html>
